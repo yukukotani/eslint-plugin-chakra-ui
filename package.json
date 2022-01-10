@@ -9,7 +9,7 @@
     "eslint-plugin"
   ],
   "author": "Yuku Kotani (yukukotani@gmail.com)",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "eslint .",
     "build": "swc ./src -d dist",
