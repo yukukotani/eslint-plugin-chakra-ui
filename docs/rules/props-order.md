@@ -1,6 +1,6 @@
 # chakra-ui/props-order
 
-Example of `incorrect` code for this rule:
+Example of **incorrect** code for this rule:
 
 ```tsx
 import { Box } from "@chakra-ui/react";
@@ -10,7 +10,7 @@ import { Box } from "@chakra-ui/react";
 </Box>;
 ```
 
-Example of `correct` code for this rule:
+Example of **correct** code for this rule:
 
 ```tsx
 import { Box } from "@chakra-ui/react";
