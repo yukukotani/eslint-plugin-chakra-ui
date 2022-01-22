@@ -23,12 +23,12 @@ export const attributesOrder: TSESLint.RuleModule<"invalidOrder", []> = {
     }
 
     return {
-      JSXElement(node) {
+      JSXOpeningElement(node) {
         if (!isChakraElement(node, parserServices)) {
           return;
         }
 
-        const sorted = [...node.openingElement.attributes].sort((a, b) => {
+        const sorted = [...node.attributes].sort((a, b) => {
           const aPriority =
             a.type === AST_NODE_TYPES.JSXSpreadAttribute
               ? Number.MAX_SAFE_INTEGER
@@ -41,7 +41,7 @@ export const attributesOrder: TSESLint.RuleModule<"invalidOrder", []> = {
           return aPriority - bPriority;
         });
 
-        for (const [index, attribute] of node.openingElement.attributes.entries()) {
+        for (const [index, attribute] of node.attributes.entries()) {
           if (attribute.type !== AST_NODE_TYPES.JSXAttribute) {
             return;
           }
@@ -51,16 +51,13 @@ export const attributesOrder: TSESLint.RuleModule<"invalidOrder", []> = {
             sortedAttribute.type !== AST_NODE_TYPES.JSXAttribute ||
             sortedAttribute.name.name !== attribute.name.name
           ) {
-            if (!attribute.parent) {
-              return;
-            }
             report({
-              node: attribute.parent,
+              node: node,
               messageId: "invalidOrder",
               fix(fixer) {
                 const sourceCode = getSourceCode();
-                const start = node.openingElement.attributes[0].range[0];
-                const end = node.openingElement.attributes[node.openingElement.attributes.length - 1].range[1];
+                const start = node.attributes[0].range[0];
+                const end = node.attributes[node.attributes.length - 1].range[1];
                 const attributesText = sorted.map((attribute) => sourceCode.getText(attribute)).join(" ");
 
                 return fixer.replaceTextRange([start, end], attributesText);

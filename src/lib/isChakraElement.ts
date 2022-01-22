@@ -1,10 +1,10 @@
 import { ParserServices } from "@typescript-eslint/experimental-utils";
-import { JSXElement } from "@typescript-eslint/types/dist/ast-spec";
+import { JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
 import { ImportDeclaration, Symbol, SyntaxKind } from "typescript";
 
-export function isChakraElement(node: JSXElement, parserServices: ParserServices): boolean {
+export function isChakraElement(node: JSXOpeningElement, parserServices: ParserServices): boolean {
   const typeChecker = parserServices.program.getTypeChecker();
-  const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node.openingElement.name);
+  const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node.name);
   const symbol = typeChecker.getSymbolAtLocation(tsNode);
   // string tag
   if (symbol == null) {
