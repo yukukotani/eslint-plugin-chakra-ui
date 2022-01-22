@@ -4,7 +4,7 @@ import { attributesOrder } from "../rules/attributes-order";
 import { createRequire } from "module";
 
 const tester = new TSESLint.RuleTester({
-  parser: createRequire(__filename).resolve("espree"),
+  parser: createRequire(__filename).resolve("@typescript-eslint/parser"),
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
@@ -17,9 +17,24 @@ const tester = new TSESLint.RuleTester({
 test("test", () => {
   tester.run("attributes-order", attributesOrder, {
     valid: [
-      { code: 'import { BB } from "chakra-ui"; \n<span>{`${1}`}</span>' },
+      {
+        code: `
+          import { Box } from "@chakra-ui/react";
+          
+          <Box mx="1" ml="2" px="2" color="red">aaa</Box>
+        `,
+      },
     ],
-    invalid: [],
+    invalid: [
+      {
+        code: `
+        import { Box } from "@chakra-ui/react";
+        
+        <Box mx="1" ml="2" color="red" mr="2" px="2">aaa</Box>
+      `,
+        errors: [{ messageId: "invalidOrder" }],
+      },
+    ],
   });
 });
 

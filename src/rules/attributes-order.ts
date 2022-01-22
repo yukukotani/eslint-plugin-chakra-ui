@@ -1,6 +1,8 @@
-import { TSESLint } from "@typescript-eslint/experimental-utils";
+import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils";
+import { isChakraElement } from "../lib/isChakraElement";
+import { getPriorityIndex } from "../lib/getPriorityIndex";
 
-export const attributesOrder: TSESLint.RuleModule<"removeDollar", []> = {
+export const attributesOrder: TSESLint.RuleModule<"invalidOrder", []> = {
   meta: {
     type: "suggestion",
     docs: {
@@ -9,38 +11,52 @@ export const attributesOrder: TSESLint.RuleModule<"removeDollar", []> = {
       url: "",
     },
     messages: {
-      removeDollar: "Remove unnecessary $ character.",
+      invalidOrder: "Invalid Chakra attributes order.",
     },
     schema: [],
     fixable: "code",
   },
-  create: (context) => {
+  create: ({ parserServices, report }) => {
+    if (!parserServices) {
+      return {};
+    }
+
     return {
-      ImportDeclaration(node) {
-        console.log("import", node);
-      },
       JSXElement(node) {
-        console.log(node.openingElement.name);
-        // node.children.forEach((JSXChild, index) => {
-        //   if (JSXChild.type === "JSXText" && JSXChild.value.endsWith("$")) {
-        //     const nextJSXChild = node.children?.[index + 1];
-        //     if (
-        //       nextJSXChild &&
-        //       nextJSXChild.type === "JSXExpressionContainer"
-        //     ) {
-        //       context.report({
-        //         node,
-        //         messageId: "removeDollar",
-        //         fix(fixer) {
-        //           return fixer.removeRange([
-        //             JSXChild.range[1] - 1,
-        //             JSXChild.range[1],
-        //           ]);
-        //         },
-        //       });
-        //     }
-        //   }
-        // });
+        if (!isChakraElement(node, parserServices)) {
+          return;
+        }
+
+        const sorted = [...node.openingElement.attributes].sort((a, b) => {
+          const aPriority =
+            a.type === AST_NODE_TYPES.JSXSpreadAttribute
+              ? Number.MAX_SAFE_INTEGER
+              : getPriorityIndex(a.name.name.toString());
+          const bPriority =
+            b.type === AST_NODE_TYPES.JSXSpreadAttribute
+              ? Number.MAX_SAFE_INTEGER
+              : getPriorityIndex(b.name.name.toString());
+
+          return aPriority - bPriority;
+        });
+
+        for (const [index, attribute] of node.openingElement.attributes.entries()) {
+          if (attribute.type !== AST_NODE_TYPES.JSXAttribute) {
+            return;
+          }
+
+          const sortedAttribute = sorted[index];
+          if (
+            sortedAttribute.type !== AST_NODE_TYPES.JSXAttribute ||
+            sortedAttribute.name.name !== attribute.name.name
+          ) {
+            report({
+              node: attribute.parent!,
+              messageId: "invalidOrder",
+            });
+            break;
+          }
+        }
       },
     };
   },
