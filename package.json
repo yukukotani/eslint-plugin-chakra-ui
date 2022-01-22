@@ -5,9 +5,15 @@
   "keywords": [
     "eslint",
     "eslintplugin",
-    "eslint-plugin"
+    "eslint-plugin",
+    "Chakra UI",
+    "chakra-ui"
   ],
   "author": "Yuku Kotani (yukukotani@gmail.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Monchi/eslint-plugin-chakra-ui"
+  },
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx ./src",
