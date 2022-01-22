@@ -1,6 +1,6 @@
 import { attributesOrder } from "./rules/attributes-order";
 
-export default {
+export = {
   rules: {
     "attribute-order": attributesOrder,
   },
