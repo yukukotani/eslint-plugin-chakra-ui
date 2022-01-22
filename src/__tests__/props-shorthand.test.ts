@@ -26,6 +26,15 @@ test("test", () => {
         `,
       },
       {
+        name: "No Shorthand",
+        code: `
+          import { Box } from "@chakra-ui/react";
+          
+          <Box margin="2" paddingTop={4}>Hello</Box>
+        `,
+        options: [{ noShorthand: true }],
+      },
+      {
         name: "Not chakra element",
         code: `
           import { NotChakra } from "not-chakra";
@@ -36,7 +45,7 @@ test("test", () => {
     ],
     invalid: [
       {
-        name: "Not shorthand",
+        name: "Require shorthand",
         code: `
           import { Box } from "@chakra-ui/react";
             
@@ -47,6 +56,21 @@ test("test", () => {
           import { Box } from "@chakra-ui/react";
             
           <Box m="2" pt={4}>Hello</Box>
+      `,
+      },
+      {
+        name: "Require no shorthand",
+        code: `
+          import { Box } from "@chakra-ui/react";
+            
+          <Box m="2" pt={4}>Hello</Box>
+      `,
+        options: [{ noShorthand: true }],
+        errors: [{ messageId: "enforcesNoShorthand" }, { messageId: "enforcesNoShorthand" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+            
+          <Box margin="2" paddingTop={4}>Hello</Box>
       `,
       },
     ],

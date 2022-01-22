@@ -53,6 +53,15 @@ const shorthandMap: Record<string, string> = {
   backgroundClip: "bgClip",
 };
 
+const nonShorthandMap = Object.keys(shorthandMap).reduce((ret, key) => {
+  ret[shorthandMap[key]] = key;
+  return ret;
+}, {} as Record<string, string>);
+
 export function getShorthand(propName: string): string | null {
   return shorthandMap[propName] || null;
+}
+
+export function getNonShorthand(propName: string): string | null {
+  return nonShorthandMap[propName] || null;
 }

@@ -1,64 +1,86 @@
 import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils";
 import { isChakraElement } from "../lib/isChakraElement";
-import { getShorthand } from "../lib/getShorthand";
+import { getNonShorthand, getShorthand } from "../lib/getShorthand";
+import { JSXAttribute } from "@typescript-eslint/types/dist/ast-spec";
 
-export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand", []> = {
-  meta: {
-    type: "suggestion",
-    docs: {
-      description: "Enforces the usage of shorthand Chakra component props.",
-      recommended: "error",
-      url: "TODO",
+type Options = {
+  noShorthand: boolean;
+};
+
+export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enforcesNoShorthand", [Partial<Options>]> =
+  {
+    meta: {
+      type: "suggestion",
+      docs: {
+        description: "Enforces the usage of shorthand Chakra component props.",
+        recommended: "error",
+        url: "TODO",
+      },
+      messages: {
+        enforcesShorthand: "Prop '{{invalidName}}' could be replaced by the '{{validName}}' shorthand.",
+        enforcesNoShorthand: "Shorthand prop '{{invalidName}}' could be replaced by the '{{validName}}'.",
+      },
+      schema: [
+        {
+          type: "object",
+          properties: {
+            noShorthand: {
+              type: "boolean",
+              default: false,
+            },
+          },
+        },
+      ],
+      fixable: "code",
     },
-    messages: {
-      enforcesShorthand: "Prop '{{propName}}' could be replaced by the '{{shorthand}}' shorthand!",
-    },
-    schema: [],
-    fixable: "code",
-  },
 
-  create: ({ parserServices, report, getSourceCode }) => {
-    if (!parserServices) {
-      return {};
-    }
+    create: ({ parserServices, report, getSourceCode, options }) => {
+      if (!parserServices) {
+        return {};
+      }
 
-    return {
-      JSXOpeningElement(node) {
-        if (!isChakraElement(node, parserServices)) {
-          return;
-        }
+      const { noShorthand = false } = options[0] || {};
 
-        for (const attribute of node.attributes) {
-          if (attribute.type !== AST_NODE_TYPES.JSXAttribute) {
+      return {
+        JSXOpeningElement(node) {
+          if (!isChakraElement(node, parserServices)) {
             return;
           }
 
-          const propName = attribute.name.name.toString();
-          const shorthand = getShorthand(propName);
-          if (shorthand) {
-            report({
-              node: node,
-              messageId: "enforcesShorthand",
-              data: {
-                propName,
-                shorthand,
-              },
-              fix(fixer) {
-                const sourceCode = getSourceCode();
-                let replaced: string;
-                if (attribute.value) {
-                  const valueText = sourceCode.getText(attribute.value);
-                  replaced = `${shorthand}=${valueText}`;
-                } else {
-                  replaced = shorthand;
-                }
+          for (const attribute of node.attributes) {
+            if (attribute.type !== AST_NODE_TYPES.JSXAttribute) {
+              return;
+            }
 
-                return fixer.replaceText(attribute, replaced);
-              },
-            });
+            const propName = attribute.name.name.toString();
+            const newPropName = noShorthand ? getNonShorthand(propName) : getShorthand(propName);
+            if (newPropName) {
+              report({
+                node: node,
+                messageId: noShorthand ? "enforcesNoShorthand" : "enforcesShorthand",
+                data: {
+                  invalidName: propName,
+                  validName: newPropName,
+                },
+                fix(fixer) {
+                  const sourceCode = getSourceCode();
+                  const newAttributeText = getAttributeText(attribute, newPropName, sourceCode);
+
+                  return fixer.replaceText(attribute, newAttributeText);
+                },
+              });
+            }
           }
-        }
-      },
-    };
-  },
-};
+        },
+      };
+    },
+  };
+
+function getAttributeText(attribute: JSXAttribute, key: string, sourceCode: Readonly<TSESLint.SourceCode>): string {
+  if (attribute.value) {
+    const valueText = sourceCode.getText(attribute.value);
+    return `${key}=${valueText}`;
+  } else {
+    return key;
+  }
+}
