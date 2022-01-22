@@ -16,7 +16,8 @@ export const attributesOrder: TSESLint.RuleModule<"invalidOrder", []> = {
     schema: [],
     fixable: "code",
   },
-  create: ({ parserServices, report }) => {
+
+  create: ({ parserServices, report, getSourceCode }) => {
     if (!parserServices) {
       return {};
     }
@@ -50,9 +51,20 @@ export const attributesOrder: TSESLint.RuleModule<"invalidOrder", []> = {
             sortedAttribute.type !== AST_NODE_TYPES.JSXAttribute ||
             sortedAttribute.name.name !== attribute.name.name
           ) {
+            if (!attribute.parent) {
+              return;
+            }
             report({
-              node: attribute.parent!,
+              node: attribute.parent,
               messageId: "invalidOrder",
+              fix(fixer) {
+                const sourceCode = getSourceCode();
+                const start = node.openingElement.attributes[0].range[0];
+                const end = node.openingElement.attributes[node.openingElement.attributes.length - 1].range[1];
+                const attributesText = sorted.map((attribute) => sourceCode.getText(attribute)).join(" ");
+
+                return fixer.replaceTextRange([start, end], attributesText);
+              },
             });
             break;
           }

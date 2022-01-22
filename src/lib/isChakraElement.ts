@@ -2,14 +2,9 @@ import { ParserServices } from "@typescript-eslint/experimental-utils";
 import { JSXElement } from "@typescript-eslint/types/dist/ast-spec";
 import { ImportDeclaration, Symbol, SyntaxKind } from "typescript";
 
-export function isChakraElement(
-  node: JSXElement,
-  parserServices: ParserServices
-): boolean {
+export function isChakraElement(node: JSXElement, parserServices: ParserServices): boolean {
   const typeChecker = parserServices.program.getTypeChecker();
-  const tsNode = parserServices.esTreeNodeToTSNodeMap.get(
-    node.openingElement.name
-  );
+  const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node.openingElement.name);
   const symbol = typeChecker.getSymbolAtLocation(tsNode);
   // string tag
   if (symbol == null) {
@@ -21,6 +16,7 @@ export function isChakraElement(
   return specifier === "@chakra-ui/react";
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types -- This Symbol is imported from "typescript"
 function getModuleSpecifierOfImportSpecifier(symbol: Symbol): string | null {
   if (symbol.declarations == null || symbol.declarations.length < 1) {
     return null;

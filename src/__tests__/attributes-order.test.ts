@@ -33,6 +33,11 @@ test("test", () => {
         <Box mx="1" ml="2" color="red" mr="2" px="2">aaa</Box>
       `,
         errors: [{ messageId: "invalidOrder" }],
+        output: `
+        import { Box } from "@chakra-ui/react";
+        
+        <Box mx="1" ml="2" mr="2" px="2" color="red">aaa</Box>
+      `,
       },
     ],
   });
