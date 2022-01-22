@@ -6,12 +6,12 @@ export const attributesOrder: TSESLint.RuleModule<"invalidOrder", []> = {
   meta: {
     type: "suggestion",
     docs: {
-      description: "Check JSXText's unnecessary `$` character.",
+      description: "Enforce a order of the Chakra component's props.",
       recommended: "error",
-      url: "",
+      url: "TODO",
     },
     messages: {
-      invalidOrder: "Invalid Chakra attributes order.",
+      invalidOrder: "Invalid Chakra props order.",
     },
     schema: [],
     fixable: "code",
