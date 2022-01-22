@@ -1,5 +1,8 @@
 # eslint-plugin-chakra-ui
 
+[![npm](https://img.shields.io/npm/v/eslint-plugin-chakra-ui)](https://www.npmjs.com/package/eslint-plugin-chakra-ui)
+[![license](https://img.shields.io/npm/l/eslint-plugin-chakra-ui)](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/LICENSE)
+
 ESLint rules for [Chakra UI](https://chakra-ui.com/) (with TypeScript for now).
 
 ## **Requirement**
