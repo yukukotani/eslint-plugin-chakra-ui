@@ -46,3 +46,7 @@ Now you can add chakra-ui rules:
 
 - [`props-order`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-order.md): Enforce semantic order of properties.
 - [`props-shorthand`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md): Enforce using shorthand property or not.
+
+## Prior Art
+
+This plugin is inspired by [eslint-plugin-tailwind-css](https://github.com/francoismassart/eslint-plugin-tailwindcss).
