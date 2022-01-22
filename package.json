@@ -20,6 +20,9 @@
     "build": "swc ./src -d dist",
     "test": "uvu -r @swc-node/register src/__tests__"
   },
+  "dependencies": {
+    "@typescript-eslint/experimental-utils": "^5.10.0"
+  },
   "devDependencies": {
     "@swc-node/register": "^1.4.2",
     "@swc/cli": "^0.1.55",
@@ -27,7 +30,6 @@
     "@swc/core-darwin-arm64": "^1.2.133",
     "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/experimental-utils": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "@typescript-eslint/types": "^5.10.0",
     "eslint": "^8.0.1",
