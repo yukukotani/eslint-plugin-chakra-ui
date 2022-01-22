@@ -2,13 +2,13 @@ import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils"
 import { isChakraElement } from "../lib/isChakraElement";
 import { getShorthand } from "../lib/getShorthand";
 
-export const enforcesShorthand: TSESLint.RuleModule<"enforcesShorthand", []> = {
+export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand", []> = {
   meta: {
     type: "suggestion",
     docs: {
       description: "Enforces the usage of shorthand Chakra component props.",
       recommended: "error",
-      url: "",
+      url: "TODO",
     },
     messages: {
       enforcesShorthand: "Prop '{{propName}}' could be replaced by the '{{shorthand}}' shorthand!",

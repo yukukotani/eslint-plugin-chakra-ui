@@ -2,7 +2,7 @@ import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils"
 import { isChakraElement } from "../lib/isChakraElement";
 import { getPriorityIndex } from "../lib/getPriorityIndex";
 
-export const attributesOrder: TSESLint.RuleModule<"invalidOrder", []> = {
+export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
   meta: {
     type: "suggestion",
     docs: {

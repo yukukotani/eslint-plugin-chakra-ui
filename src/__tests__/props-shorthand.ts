@@ -1,7 +1,7 @@
 import { TSESLint } from "@typescript-eslint/experimental-utils";
 import { test } from "uvu";
-import { attributesOrder } from "../rules/attributes-order";
 import { createRequire } from "module";
+import { propsShorthandRule } from "../rules/props-shorthand";
 
 const tester = new TSESLint.RuleTester({
   parser: createRequire(__filename).resolve("@typescript-eslint/parser"),
@@ -15,14 +15,14 @@ const tester = new TSESLint.RuleTester({
 });
 
 test("test", () => {
-  tester.run("attributes-order", attributesOrder, {
+  tester.run("props-shorthand", propsShorthandRule, {
     valid: [
       {
-        name: "Sorted style props",
+        name: "Shorthand",
         code: `
           import { Box } from "@chakra-ui/react";
           
-          <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
+          <Box m="2" pt={4}>Hello</Box>
         `,
       },
       {
@@ -30,23 +30,23 @@ test("test", () => {
         code: `
           import { NotChakra } from "not-chakra";
           
-          <NotChakra m="1" fontSize="md" px="2" py={2}>Hello</NotChakra>
+          <NotChakra margin="1">Hello</NotChakra>
         `,
       },
     ],
     invalid: [
       {
-        name: "Not sorted",
+        name: "Not shorthand",
         code: `
           import { Box } from "@chakra-ui/react";
             
-          <Box px="2" as="div" onClick={onClick} m="1" key={key} {...props} fontSize="md" py={2}>Hello</Box>
+          <Box margin="2" paddingTop={4}>Hello</Box>
       `,
-        errors: [{ messageId: "invalidOrder" }],
+        errors: [{ messageId: "enforcesShorthand" }, { messageId: "enforcesShorthand" }],
         output: `
           import { Box } from "@chakra-ui/react";
             
-          <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
+          <Box m="2" pt={4}>Hello</Box>
       `,
       },
     ],

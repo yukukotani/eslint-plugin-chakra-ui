@@ -1,7 +1,9 @@
-import { attributesOrder } from "./rules/attributes-order";
+import { propsOrderRule } from "./rules/props-order";
+import { propsShorthandRule } from "./rules/props-shorthand";
 
 export = {
   rules: {
-    "attribute-order": attributesOrder,
+    "props-order": propsOrderRule,
+    "props-shorthand": propsShorthandRule,
   },
 };
