@@ -1,6 +1,12 @@
 # eslint-plugin-chakra-ui
 
-ESLint Plugin for Chakra UI
+ESLint rules for [Chakra UI](https://chakra-ui.com/) (with TypeScript for now).
+
+## **Requirement**
+
+Currently, this plugin only works with TypeScript, but not with JavaScript, because it depends on `@typescript-eslint/parser`.
+
+TypeScript 4.4 or higher is supported.
 
 ## Installation
 
@@ -10,37 +16,33 @@ You'll first need to install [ESLint](https://eslint.org/):
 npm i eslint --save-dev
 ```
 
-Next, install `eslint-plugin-chakra-ui`:
+Next, install `eslint-plugin-chakra-ui` and `@typescript-eslint/parser`:
 
 ```sh
-npm install eslint-plugin-chakra-ui --save-dev
+npm install eslint-plugin-chakra-ui @typescript-eslint/parser --save-dev
 ```
 
-## Usage
-
-Add `chakra-ui` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
+Then set the `parser` property and add `chakra-ui` to the `plugins` property of your `.eslintrc` configuration file:
 
 ```json
 {
-    "plugins": [
-        "chakra-ui"
-    ]
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["chakra-ui"]
 }
 ```
 
-
-Then configure the rules you want to use under the rules section.
+Now you can add chakra-ui rules:
 
 ```json
 {
-    "rules": {
-        "chakra-ui/rule-name": 2
-    }
+  "rules": {
+    "chakra-ui/props-order": "error",
+    "chakra-ui/props-shorthand": "error"
+  }
 }
 ```
 
 ## Supported Rules
 
-* Fill in provided rules here
-
-
+- `props-order`: Enforce semantic order of properties.
+- `props-shorthand`: Enforce using shorthand property or not.
