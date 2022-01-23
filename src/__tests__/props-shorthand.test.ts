@@ -34,6 +34,17 @@ test("test", () => {
         options: [{ noShorthand: true }],
       },
       {
+        name: "Grid and Flex props",
+        code: `
+          import { Grid, Flex } from "@chakra-ui/react";
+          
+          <>
+            <Grid gap={2}>Hello</Grid>
+            <Flex gridGap={2} justify="center">Hello</Flex>
+          </>
+        `,
+      },
+      {
         name: "Not chakra element",
         code: `
           import { NotChakra } from "not-chakra";
@@ -70,6 +81,26 @@ test("test", () => {
           import { Box } from "@chakra-ui/react";
             
           <Box margin="2" paddingTop={4}>Hello</Box>
+      `,
+      },
+      {
+        name: "Require Grid and Flex props shorthand",
+        code: `
+          import { Grid, Flex } from "@chakra-ui/react";
+            
+          <>
+            <Grid gridGap={2}>Hello</Grid>
+            <Flex gridGap={2} justifyContent="center">Hello</Flex>
+          </>
+      `,
+        errors: [{ messageId: "enforcesShorthand" }, { messageId: "enforcesShorthand" }],
+        output: `
+          import { Grid, Flex } from "@chakra-ui/react";
+            
+          <>
+            <Grid gap={2}>Hello</Grid>
+            <Flex gridGap={2} justify="center">Hello</Flex>
+          </>
       `,
       },
     ],

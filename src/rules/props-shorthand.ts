@@ -52,8 +52,12 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
               return;
             }
 
+            const sourceCode = getSourceCode();
+            const componentName = sourceCode.getText(node.name);
             const propName = attribute.name.name.toString();
-            const newPropName = noShorthand ? getNonShorthand(propName) : getShorthand(propName);
+            const newPropName = noShorthand
+              ? getNonShorthand(componentName, propName)
+              : getShorthand(componentName, propName);
             if (newPropName) {
               report({
                 node: node,
