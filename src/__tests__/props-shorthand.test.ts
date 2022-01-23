@@ -1,10 +1,9 @@
 import { TSESLint } from "@typescript-eslint/experimental-utils";
 import { test } from "uvu";
-import { createRequire } from "module";
 import { propsShorthandRule } from "../rules/props-shorthand";
 
 const tester = new TSESLint.RuleTester({
-  parser: createRequire(__filename).resolve("@typescript-eslint/parser"),
+  parser: require.resolve("@typescript-eslint/parser"),
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",

@@ -1,10 +1,9 @@
 import { TSESLint } from "@typescript-eslint/experimental-utils";
 import { test } from "uvu";
 import { propsOrderRule } from "../rules/props-order";
-import { createRequire } from "module";
 
 const tester = new TSESLint.RuleTester({
-  parser: createRequire(__filename).resolve("@typescript-eslint/parser"),
+  parser: require.resolve("@typescript-eslint/parser"),
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
