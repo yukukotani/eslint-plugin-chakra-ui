@@ -3,8 +3,6 @@ import { JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
 import {
   Declaration,
   ImportDeclaration,
-  ImportEqualsDeclaration,
-  ModuleBlock,
   Symbol,
   SyntaxKind,
   Expression,
