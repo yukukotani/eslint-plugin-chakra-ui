@@ -3,9 +3,9 @@ import { test } from "uvu";
 import { propsOrderRule } from "../rules/props-order";
 
 const tester = new TSESLint.RuleTester({
-  parser: require.resolve("@typescript-eslint/parser"),
+  parser: require("espree"),
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 2015,
     sourceType: "module",
     ecmaFeatures: {
       jsx: true,

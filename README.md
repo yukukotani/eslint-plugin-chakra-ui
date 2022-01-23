@@ -3,11 +3,11 @@
 [![npm](https://img.shields.io/npm/v/eslint-plugin-chakra-ui)](https://www.npmjs.com/package/eslint-plugin-chakra-ui)
 [![license](https://img.shields.io/npm/l/eslint-plugin-chakra-ui)](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/LICENSE)
 
-ESLint rules for [Chakra UI](https://chakra-ui.com/) (with TypeScript for now).
+ESLint rules for [Chakra UI](https://chakra-ui.com/).
 
 ## **Requirement**
 
-Currently, this plugin only works with TypeScript, but not with JavaScript, because it depends on `@typescript-eslint/parser`.
+This plugin depends on TypeScript to check whether the component is a Chakra component or not. You need to install `@typescript-eslint/parser` but you can still write vanilla JavaScript.
 
 TypeScript 4.4 or higher is supported.
 
@@ -19,7 +19,7 @@ You'll first need to install [ESLint](https://eslint.org/):
 npm i eslint --save-dev
 ```
 
-Next, install `eslint-plugin-chakra-ui` and `@typescript-eslint/parser`:
+Next, install `eslint-plugin-chakra-ui`, `@typescript-eslint/parser`:
 
 ```sh
 npm install eslint-plugin-chakra-ui @typescript-eslint/parser --save-dev
