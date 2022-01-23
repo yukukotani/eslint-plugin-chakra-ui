@@ -3,8 +3,6 @@ import { JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
 import {
   Declaration,
   ImportDeclaration,
-  ImportEqualsDeclaration,
-  ModuleBlock,
   Symbol,
   SyntaxKind,
   Expression,
@@ -44,7 +42,7 @@ function findModuleSpecifier(declaration: Declaration): Expression | null {
   if (declaration.kind === SyntaxKind.ImportSpecifier) {
     return (declaration.parent.parent.parent as ImportDeclaration).moduleSpecifier;
   } else if (declaration.kind === SyntaxKind.NamedImports) {
-    // @ts-ignore TS 4.4 Support. declaration.parent.parent.parent is ImportEqualsDeclaration
+    // @ts-expect-error TS 4.4 Support. declaration.parent.parent.parent is ImportEqualsDeclaration
     return declaration.parent.parent.parent.moduleSpecifier;
   }
 
