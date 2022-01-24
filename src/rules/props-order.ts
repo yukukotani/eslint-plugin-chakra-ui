@@ -1,6 +1,7 @@
 import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils";
-import { isChakraElement } from "../lib/isChakraElement";
 import { getPriorityIndex } from "../lib/getPriorityIndex";
+import { isChakraElement } from "../lib/isChakraElement";
+import { updateImportedMap } from "../lib/updateImportedMap";
 
 export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
   meta: {
@@ -21,10 +22,14 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
     if (!parserServices) {
       return {};
     }
+    const importedMap = new Map<string, true>();
 
     return {
+      ImportDeclaration(node) {
+        updateImportedMap(importedMap, node);
+      },
       JSXOpeningElement(node) {
-        if (!isChakraElement(node, parserServices)) {
+        if (!isChakraElement(node, importedMap)) {
           return;
         }
 
@@ -66,6 +71,9 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
             break;
           }
         }
+      },
+      "Program:exit"() {
+        importedMap.clear();
       },
     };
   },

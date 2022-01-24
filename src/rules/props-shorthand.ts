@@ -2,6 +2,7 @@ import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils"
 import { isChakraElement } from "../lib/isChakraElement";
 import { getNonShorthand, getShorthand } from "../lib/getShorthand";
 import { JSXAttribute } from "@typescript-eslint/types/dist/ast-spec";
+import { updateImportedMap } from "../lib/updateImportedMap";
 
 type Options = {
   noShorthand: boolean;
@@ -38,12 +39,15 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
       if (!parserServices) {
         return {};
       }
-
+      const importedMap = new Map<string, true>();
       const { noShorthand = false } = options[0] || {};
 
       return {
+        ImportDeclaration(node) {
+          updateImportedMap(importedMap, node);
+        },
         JSXOpeningElement(node) {
-          if (!isChakraElement(node, parserServices)) {
+          if (!isChakraElement(node, importedMap)) {
             return;
           }
 
@@ -75,6 +79,9 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
               });
             }
           }
+        },
+        "Program:exit"() {
+          importedMap.clear();
         },
       };
     },

@@ -1,50 +1,22 @@
-import { ParserServices } from "@typescript-eslint/experimental-utils";
-import { JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
-import {
-  Declaration,
-  ImportDeclaration,
-  Symbol,
-  SyntaxKind,
-  Expression,
-} from "typescript";
+import { AST_NODE_TYPES, JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
 
-export function isChakraElement(node: JSXOpeningElement, parserServices: ParserServices): boolean {
-  const typeChecker = parserServices.program.getTypeChecker();
-  const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node.name);
-  const symbol = typeChecker.getSymbolAtLocation(tsNode);
-  // string tag
-  if (symbol == null) {
-    return false;
+// To use this function, use updateImportedMap in the import statement.
+export function isChakraElement(node: JSXOpeningElement, importedMap: Map<string, true>): boolean {
+  const element = node.name;
+
+  switch (element.type) {
+    case AST_NODE_TYPES.JSXIdentifier: {
+      return importedMap.has(element.name);
+    }
+    case AST_NODE_TYPES.JSXMemberExpression:
+      return false; // TODO:
+    case AST_NODE_TYPES.JSXNamespacedName:
+      // React doesn't support this syntax.
+      // See: https://github.com/facebook/jsx/issues/13
+      return false;
+    default: {
+      const _exhaustiveCheck: never = element;
+      return false;
+    }
   }
-
-  const specifier = getModuleSpecifierOfImportSpecifier(symbol);
-
-  return specifier === "@chakra-ui/react";
-}
-
-// eslint-disable-next-line @typescript-eslint/ban-types -- This Symbol is imported from "typescript"
-function getModuleSpecifierOfImportSpecifier(symbol: Symbol): string | null {
-  if (symbol.declarations == null || symbol.declarations.length < 1) {
-    return null;
-  }
-
-  const moduleSpecifier = findModuleSpecifier(symbol.declarations[0]);
-  if (!moduleSpecifier) {
-    return null;
-  }
-
-  const text = moduleSpecifier.getText();
-  // strip quote
-  return text.slice(1, text.length - 1);
-}
-
-function findModuleSpecifier(declaration: Declaration): Expression | null {
-  if (declaration.kind === SyntaxKind.ImportSpecifier) {
-    return (declaration.parent.parent.parent as ImportDeclaration).moduleSpecifier;
-  } else if (declaration.kind === SyntaxKind.NamedImports) {
-    // @ts-expect-error TS 4.4 Support. declaration.parent.parent.parent is ImportEqualsDeclaration
-    return declaration.parent.parent.parent.moduleSpecifier;
-  }
-
-  return null;
 }
