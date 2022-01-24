@@ -48,6 +48,34 @@ test("test", () => {
           <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
       `,
       },
+      {
+        name: "Default Import",
+        code: `
+          import Chakra from "@chakra-ui/react";
+          
+          <Chakra.Box key={key} as="div"  m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Chakra.Box>
+        `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+            
+          <Chakra.Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Chakra.Box>
+      `,
+      },
+      {
+        name: "Namespace Import",
+        code: `
+          import * from "@chakra-ui/react";
+          
+          <Box key={key} as="div"  m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
+        `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+            
+          <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
+      `,
+      },
     ],
   });
 });
