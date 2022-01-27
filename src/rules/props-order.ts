@@ -1,6 +1,7 @@
 import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getPriorityIndex } from "../lib/getPriorityIndex";
+import { JSXAttribute, JSXSpreadAttribute } from "@typescript-eslint/types/dist/ast-spec";
 
 export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
   meta: {
@@ -41,11 +42,11 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
           return aPriority - bPriority;
         });
 
+        const sourceCode = getSourceCode();
         for (const [index, attribute] of node.attributes.entries()) {
           if (attribute.type !== AST_NODE_TYPES.JSXAttribute) {
-            return;
+            continue;
           }
-
           const sortedAttribute = sorted[index];
           if (
             sortedAttribute.type !== AST_NODE_TYPES.JSXAttribute ||
@@ -55,12 +56,13 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
               node: node,
               messageId: "invalidOrder",
               fix(fixer) {
-                const sourceCode = getSourceCode();
-                const start = node.attributes[0].range[0];
-                const end = node.attributes[node.attributes.length - 1].range[1];
-                const attributesText = sorted.map((attribute) => sourceCode.getText(attribute)).join(" ");
-
-                return fixer.replaceTextRange([start, end], attributesText);
+                const fixingList = sorted.map((sortedAttribute, index) =>
+                  createFix(node.attributes[index], sortedAttribute, fixer, sourceCode)
+                );
+                // Operate from the end so that the unoperated node positions are not changed.
+                // If you start from the start, each time you manipulate a attribute,
+                // the following node positions will shift and autofix never work.
+                return fixingList.reverse();
               },
             });
             break;
@@ -69,4 +71,14 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
       },
     };
   },
+};
+
+const createFix = (
+  unsotedAttribute: JSXAttribute | JSXSpreadAttribute,
+  sortedAttribute: JSXAttribute | JSXSpreadAttribute,
+  fixer: TSESLint.RuleFixer,
+  sourceCode: Readonly<TSESLint.SourceCode>
+) => {
+  const nodeText = sourceCode.getText(sortedAttribute);
+  return fixer.replaceText(unsotedAttribute, nodeText);
 };
