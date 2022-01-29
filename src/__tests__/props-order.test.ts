@@ -48,6 +48,48 @@ test("test", () => {
           <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
       `,
       },
+      {
+        name: "Multiple lines must not be concatenated",
+        code: `
+                import { Box } from "@chakra-ui/react";
+
+                <Box
+                  px="2"
+                  as="div"
+                  fontSize="md"
+                  py={2}
+                >
+                  Hello
+                </Box>;
+            `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+                import { Box } from "@chakra-ui/react";
+
+                <Box
+                  as="div"
+                  px="2"
+                  py={2}
+                  fontSize="md"
+                >
+                  Hello
+                </Box>;
+            `,
+      },
+      {
+        name: "Spreading should be sorted",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box {...props} px="2">Hello</Box>
+      `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box px="2" {...props}>Hello</Box>
+      `,
+      },
     ],
   });
 });
