@@ -32,6 +32,14 @@ test("test", () => {
           <NotChakra m="1" fontSize="md" px="2" py={2}>Hello</NotChakra>
         `,
       },
+      {
+        name: "Spreading should not be sorted",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box py="2" {...props} as="div">Hello</Box>
+      `,
+      },
     ],
     invalid: [
       {
@@ -75,20 +83,6 @@ test("test", () => {
                   Hello
                 </Box>;
             `,
-      },
-      {
-        name: "Spreading should be sorted",
-        code: `
-          import { Box } from "@chakra-ui/react";
-
-          <Box {...props} px="2">Hello</Box>
-      `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
-          import { Box } from "@chakra-ui/react";
-
-          <Box {...props} px="2">Hello</Box>
-      `,
       },
       {
         name: "Non chakra props should be sorted in alphabetical order",
