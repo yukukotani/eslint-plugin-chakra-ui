@@ -21,7 +21,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "me",
       "marginEnd",
       "mb",
-      "marginBotto",
+      "marginBottom",
       "ml",
       "marginLeft",
       "ms",
