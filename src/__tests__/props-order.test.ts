@@ -21,7 +21,7 @@ test("test", () => {
         code: `
           import { Box } from "@chakra-ui/react";
 
-          <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
+          <Box as="div" key={key} m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
         `,
       },
       {
@@ -38,14 +38,56 @@ test("test", () => {
         name: "Not sorted",
         code: `
           import { Box } from "@chakra-ui/react";
-            
+
           <Box px="2" as="div" onClick={onClick} m="1" key={key} {...props} fontSize="md" py={2}>Hello</Box>
       `,
         errors: [{ messageId: "invalidOrder" }],
         output: `
           import { Box } from "@chakra-ui/react";
-            
+
           <Box as="div" key={key} m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
+      `,
+      },
+      {
+        name: "Multiple lines must not be concatenated",
+        code: `
+                import { Box } from "@chakra-ui/react";
+
+                <Box
+                  px="2"
+                  as="div"
+                  fontSize="md"
+                  py={2}
+                >
+                  Hello
+                </Box>;
+            `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+                import { Box } from "@chakra-ui/react";
+
+                <Box
+                  as="div"
+                  px="2"
+                  py={2}
+                  fontSize="md"
+                >
+                  Hello
+                </Box>;
+            `,
+      },
+      {
+        name: "Spreading should be sorted",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box {...props} px="2">Hello</Box>
+      `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box {...props} px="2">Hello</Box>
       `,
       },
       {
@@ -67,7 +109,7 @@ test("test", () => {
         code: `
           import { Box } from "@chakra-ui/react";
 
-          <Box sx={sx} key={key}  textStyle={textStyle} layerStyle={layerStyle} as={as}>Hello</Box>
+          <Box sx={sx} key={key} textStyle={textStyle} layerStyle={layerStyle} as={as}>Hello</Box>
         `,
         errors: [{ messageId: "invalidOrder" }],
         output: `
