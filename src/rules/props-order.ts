@@ -1,6 +1,7 @@
 import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getPriorityIndex } from "../lib/getPriorityIndex";
+import { JSXAttribute, JSXSpreadAttribute } from "@typescript-eslint/types/dist/ast-spec";
 
 export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
   meta: {
@@ -28,18 +29,9 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
           return;
         }
 
-        const sorted = [...node.attributes].sort((a, b) => {
-          const aPriority =
-            a.type === AST_NODE_TYPES.JSXSpreadAttribute
-              ? Number.MAX_SAFE_INTEGER
-              : getPriorityIndex(a.name.name.toString());
-          const bPriority =
-            b.type === AST_NODE_TYPES.JSXSpreadAttribute
-              ? Number.MAX_SAFE_INTEGER
-              : getPriorityIndex(b.name.name.toString());
-
-          return aPriority - bPriority;
-        });
+        // const sorted = [...node.attributes].sort((a, b) => {
+        const sorted = sortAttributes(node.attributes);
+        // });
 
         for (const [index, attribute] of node.attributes.entries()) {
           if (attribute.type !== AST_NODE_TYPES.JSXAttribute) {
@@ -69,4 +61,53 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
       },
     };
   },
+};
+const areAllJSXAttribute = (attributes: (JSXAttribute | JSXSpreadAttribute)[]): attributes is JSXAttribute[] => {
+  return attributes.every((attribute) => attribute.type === AST_NODE_TYPES.JSXAttribute);
+};
+
+const sortAttributes = (unsorted: (JSXAttribute | JSXSpreadAttribute)[]) => {
+  const noSpread = areAllJSXAttribute(unsorted);
+
+  if (noSpread) {
+    const sorted = [...unsorted].sort((a, b) => compare(a, b));
+    return sorted;
+  }
+
+  // contains SpreadAttribute
+  // Sort sections which has only JSXAttributes.
+  let start = 0;
+  let end = 0;
+  let sorted: (JSXAttribute | JSXSpreadAttribute)[] = [];
+  for (let i = 0; i < unsorted.length; i++) {
+    if (unsorted[i].type === AST_NODE_TYPES.JSXSpreadAttribute) {
+      end = i;
+      if (start < end) {
+        // Sort sections which don't have JSXSpreadAttribute.
+        const sectionToSort = unsorted.slice(start, end) as JSXAttribute[];
+        const sectionSorted = sectionToSort.sort((a, b) => compare(a, b));
+        sorted = sorted.concat(sectionSorted);
+      }
+      // JSXSpreadAttribute will be pushed as is.
+      sorted.push(unsorted[i]);
+
+      start = i + 1;
+    } else if (i === unsorted.length - 1) {
+      // This is last attribute and not spread one.
+      end = i + 1;
+      if (start < end) {
+        const sectionToSort = unsorted.slice(start, end) as JSXAttribute[];
+        const sectionSorted = sectionToSort.sort((a, b) => compare(a, b));
+        sorted = sorted.concat(sectionSorted);
+      }
+    }
+  }
+  return sorted;
+};
+
+const compare = (a: JSXAttribute, b: JSXAttribute) => {
+  const aPriority = getPriorityIndex(a.name.name.toString());
+  const bPriority = getPriorityIndex(b.name.name.toString());
+
+  return aPriority - bPriority;
 };
