@@ -45,7 +45,7 @@ test("test", () => {
         output: `
           import { Box } from "@chakra-ui/react";
             
-          <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
+          <Box as="div" key={key} m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
       `,
       },
     ],
