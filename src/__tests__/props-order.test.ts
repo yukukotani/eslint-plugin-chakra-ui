@@ -20,7 +20,7 @@ test("test", () => {
         name: "Sorted style props",
         code: `
           import { Box } from "@chakra-ui/react";
-          
+
           <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
         `,
       },
@@ -47,6 +47,34 @@ test("test", () => {
             
           <Box as="div" key={key} m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
       `,
+      },
+      {
+        name: "Non chakra props should be sorted in alphabetical order",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box onClick={onClick} data-test-id="data-test-id" data-index={1}>Hello</Box>
+        `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box data-index={1} data-test-id="data-test-id" onClick={onClick}>Hello</Box>
+        `,
+      },
+      {
+        name: "Same priority should be sorted in defined order",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box sx={sx} key={key}  textStyle={textStyle} layerStyle={layerStyle} as={as}>Hello</Box>
+        `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box as={as} key={key} sx={sx} layerStyle={layerStyle} textStyle={textStyle}>Hello</Box>
+        `,
       },
     ],
   });

@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils";
 import { isChakraElement } from "../lib/isChakraElement";
-import { getPriorityIndex } from "../lib/getPriorityIndex";
+import { getIndexInPriority, getPriorityIndex, priorityGroupsLength } from "../lib/getPriorityIndex";
 import { JSXAttribute, JSXSpreadAttribute } from "@typescript-eslint/types/dist/ast-spec";
 
 export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
@@ -109,5 +109,21 @@ const compare = (a: JSXAttribute, b: JSXAttribute) => {
   const aPriority = getPriorityIndex(a.name.name.toString());
   const bPriority = getPriorityIndex(b.name.name.toString());
 
-  return aPriority - bPriority;
+  if (aPriority !== bPriority) {
+    return aPriority - bPriority;
+  }
+
+  // Same Priority. Then compare it.
+  const priority = aPriority;
+  const order = priority <= priorityGroupsLength ? "predefined" : "alphabetical order";
+  switch (order) {
+    case "predefined": {
+      const aIndex = getIndexInPriority(a.name.name.toString(), aPriority);
+      const bIndex = getIndexInPriority(b.name.name.toString(), bPriority);
+
+      return aIndex - bIndex;
+    }
+    case "alphabetical order":
+      return a.name.name < b.name.name ? -1 : 1;
+  }
 };
