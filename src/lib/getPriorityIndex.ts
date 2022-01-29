@@ -1,16 +1,8 @@
-type PriorityGroup =
-  | {
-      name: string;
-      keys: readonly string[];
-      isIncluded?: undefined;
-    }
-  | {
-      name: string;
-      keys?: undefined;
-      includes: (key: string) => boolean;
-    };
-
-const directions = ["Top", "Right", "End", "Bottom", "Left", "Start"];
+type PriorityGroup = {
+  name: string;
+  keys: readonly string[];
+  isIncluded?: undefined;
+};
 
 const priorityGroups: readonly PriorityGroup[] = [
   {
@@ -19,11 +11,45 @@ const priorityGroups: readonly PriorityGroup[] = [
   },
   {
     name: "Margin",
-    keys: ["m", "margin", "mt", "mr", "me", "mb", "ml", "ms", "mx", "my", ...directions.map((dir) => `margin${dir}`)],
+    keys: [
+      "m",
+      "margin",
+      "mt",
+      "marginTop",
+      "mr",
+      "marginRight",
+      "me",
+      "marginEnd",
+      "mb",
+      "marginBotto",
+      "ml",
+      "marginLeft",
+      "ms",
+      "marginStart",
+      "mx",
+      "my",
+    ],
   },
   {
     name: "Padding",
-    keys: ["p", "padding", "pt", "pr", "pe", "pb", "pl", "ps", "px", "py", ...directions.map((dir) => `padding${dir}`)],
+    keys: [
+      "p",
+      "padding",
+      "pt",
+      "paddingTop",
+      "pr",
+      "paddingRight",
+      "pe",
+      "paddingEnd",
+      "pb",
+      "paddingBotto",
+      "pl",
+      "paddingLeft",
+      "ps",
+      "paddingStart",
+      "px",
+      "py",
+    ],
   },
   {
     name: "Color",
@@ -35,7 +61,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "fontFamily",
       "fontSize",
       "fontWeight",
-      "fontHeight",
+      "lineHeight",
       "letterSpacing",
       "textAlign",
       "fontStyle",
@@ -135,9 +161,32 @@ const priorityGroups: readonly PriorityGroup[] = [
       "borderWidth",
       "borderStyle",
       "borderColor",
+      "borderTop",
+      "borderTopWidth",
+      "borderTopStyle",
+      "borderTopColor",
+      "borderRight",
+      "borderRightWidth",
+      "borderRightStyle",
+      "borderRightColor",
+      "borderBottom",
+      "borderBottomWidth",
+      "borderBottomStyle",
+      "borderBottomColor",
+      "borderLeft",
+      "borderLeftWidth",
+      "borderLeftStyle",
+      "borderLeftColor",
+      "borderStart",
+      "borderStartWidth",
+      "borderStartStyle",
+      "borderStartColor",
+      "borderEnd",
+      "borderEndWidth",
+      "borderEndStyle",
+      "borderEndColor",
       "borderX",
       "borderY",
-      ...directions.flatMap((dir) => [`border${dir}`, `border${dir}Width`, `border${dir}Style`, `border${dir}Color`]),
     ],
   },
   {
@@ -152,7 +201,12 @@ const priorityGroups: readonly PriorityGroup[] = [
       "borderBottomEndRadius",
       "borderBottomLeftRadius",
       "borderBottomStartRadius",
-      ...directions.flatMap((dir) => [`border${dir}`, `border${dir}Width`, `border${dir}Style`, `border${dir}Color`]),
+      "borderTopRadius",
+      "borderRightRadius",
+      "borderEndRadius",
+      "borderBottomRadius",
+      "borderLeftRadius",
+      "borderStartRadius",
     ],
   },
   {
@@ -165,7 +219,65 @@ const priorityGroups: readonly PriorityGroup[] = [
   },
   {
     name: "Pseudo",
-    includes: (key) => key.startsWith("_"),
+    keys: [
+      "_hover",
+      "_active",
+      "_focus",
+      "_highlighted",
+      "_focusWithin",
+      "_focusVisible",
+      "_disabled",
+      "_readOnly",
+      "_before",
+      "_after",
+      "_empty",
+      "_expanded",
+      "_checked",
+      "_grabbed",
+      "_pressed",
+      "_invalid",
+      "_valid",
+      "_loading",
+      "_selected",
+      "_hidden",
+      "_autofill",
+      "_even",
+      "_odd",
+      "_first",
+      "_last",
+      "_notFirst",
+      "_notLast",
+      "_visited",
+      "_activeLink",
+      "_activeStep",
+      "_indeterminate",
+      "_groupHover",
+      "_peerHover",
+      "_groupFocus",
+      "_peerFocus",
+      "_groupFocusVisible",
+      "_peerFocusVisible",
+      "_groupActive",
+      "_groupDisabled",
+      "_peerDisabled",
+      "_groupInvalid",
+      "_peerInvalid",
+      "_groupChecked",
+      "_peerChecked",
+      "_groupFocusWithin",
+      "_peerFocusWithin",
+      "_peerPlaceholderShown",
+      "_placeholder",
+      "_placeholderShown",
+      "_fullScreen",
+      "_selection",
+      "_rtl",
+      "_ltr",
+      "_mediaDark",
+      "_mediaReduceMotion",
+      "_dark",
+      "_light",
+    ],
   },
   {
     name: "Other Style Props",
@@ -197,7 +309,7 @@ const priorityGroups: readonly PriorityGroup[] = [
 
 export function getPriorityIndex(key: string): number {
   const index = priorityGroups.findIndex((group) => {
-    return group.keys ? group.keys.includes(key) : group.includes(key);
+    return group.keys.includes(key);
   });
   return index === -1 ? Number.MAX_SAFE_INTEGER : index;
 }
