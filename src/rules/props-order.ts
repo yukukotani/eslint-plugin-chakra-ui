@@ -29,9 +29,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
           return;
         }
 
-        // const sorted = [...node.attributes].sort((a, b) => {
         const sorted = sortAttributes(node.attributes);
-        // });
 
         const sourceCode = getSourceCode();
         for (const [index, attribute] of node.attributes.entries()) {
