@@ -108,9 +108,3 @@ test("test", () => {
 });
 
 test.run();
-
-test.after(() => {
-  setTimeout(() => {
-    process.exit(0);
-  }, 500);
-});
