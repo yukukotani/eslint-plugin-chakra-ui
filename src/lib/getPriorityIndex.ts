@@ -312,3 +312,16 @@ export function getPriorityIndex(key: string): number {
   });
   return index === -1 ? Number.MAX_SAFE_INTEGER : index;
 }
+
+export const priorityGroupsLength = priorityGroups.length;
+
+export const getIndexInPriority = (key: string, groupIndex: number): number => {
+  const keys = priorityGroups[groupIndex].keys;
+  if (keys) {
+    const index = keys.indexOf(key);
+    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+  }
+
+  // If key doesn't exist, we cann't determine index.
+  return 0;
+};

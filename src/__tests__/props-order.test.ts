@@ -20,8 +20,8 @@ test("test", () => {
         name: "Sorted style props",
         code: `
           import { Box } from "@chakra-ui/react";
-          
-          <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
+
+          <Box as="div" key={key} m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
         `,
       },
       {
@@ -32,20 +32,28 @@ test("test", () => {
           <NotChakra m="1" fontSize="md" px="2" py={2}>Hello</NotChakra>
         `,
       },
+      {
+        name: "Spreading should not be sorted",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box py="2" {...props} as="div">Hello</Box>
+      `,
+      },
     ],
     invalid: [
       {
         name: "Not sorted",
         code: `
           import { Box } from "@chakra-ui/react";
-            
+
           <Box px="2" as="div" onClick={onClick} m="1" key={key} {...props} fontSize="md" py={2}>Hello</Box>
       `,
         errors: [{ messageId: "invalidOrder" }],
         output: `
           import { Box } from "@chakra-ui/react";
-            
-          <Box as="div" key={key} m="1" px="2" py={2} fontSize="md" onClick={onClick} {...props}>Hello</Box>
+
+          <Box as="div" key={key} m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
       `,
       },
       {
@@ -77,18 +85,32 @@ test("test", () => {
             `,
       },
       {
-        name: "Spreading should be sorted",
+        name: "Non chakra props should be sorted in alphabetical order",
         code: `
           import { Box } from "@chakra-ui/react";
 
-          <Box {...props} px="2">Hello</Box>
-      `,
+          <Box onClick={onClick} data-test-id="data-test-id" data-index={1}>Hello</Box>
+        `,
         errors: [{ messageId: "invalidOrder" }],
         output: `
           import { Box } from "@chakra-ui/react";
 
-          <Box px="2" {...props}>Hello</Box>
-      `,
+          <Box data-index={1} data-test-id="data-test-id" onClick={onClick}>Hello</Box>
+        `,
+      },
+      {
+        name: "Same priority should be sorted in defined order",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box sx={sx} key={key} textStyle={textStyle} layerStyle={layerStyle} as={as}>Hello</Box>
+        `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box as={as} key={key} sx={sx} layerStyle={layerStyle} textStyle={textStyle}>Hello</Box>
+        `,
       },
     ],
   });
