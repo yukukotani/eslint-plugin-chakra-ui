@@ -1,4 +1,4 @@
-import { TSESLint } from "@typescript-eslint/experimental-utils";
+import { TSESLint } from "@typescript-eslint/utils";
 import { test } from "uvu";
 import { propsShorthandRule } from "../rules/props-shorthand";
 

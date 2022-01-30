@@ -1,4 +1,4 @@
-import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/experimental-utils";
+import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getPriorityIndex } from "../lib/getPriorityIndex";
 import { JSXAttribute, JSXSpreadAttribute } from "@typescript-eslint/types/dist/ast-spec";

@@ -1,4 +1,4 @@
-import { ParserServices } from "@typescript-eslint/experimental-utils";
+import { ParserServices } from "@typescript-eslint/utils";
 import { JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
 import {
   Declaration,

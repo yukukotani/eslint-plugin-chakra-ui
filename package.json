@@ -24,7 +24,7 @@
     "test:watch": "watchlist src -- npm run test"
   },
   "dependencies": {
-    "@typescript-eslint/experimental-utils": "^5.10.0"
+    "@typescript-eslint/utils": "^5.10.1"
   },
   "devDependencies": {
     "@swc-node/register": "^1.4.2",
