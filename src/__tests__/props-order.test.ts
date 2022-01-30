@@ -20,15 +20,13 @@ test("test", () => {
         name: "Sorted style props",
         code: `
           import { Box } from "@chakra-ui/react";
-
-          <Box as="div" key={key} m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
+          <Box key={key} as="div" m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
         `,
       },
       {
         name: "Not chakra element",
         code: `
           import { NotChakra } from "not-chakra";
-
           <NotChakra m="1" fontSize="md" px="2" py={2}>Hello</NotChakra>
         `,
       },
@@ -36,7 +34,6 @@ test("test", () => {
         name: "Spreading should not be sorted",
         code: `
           import { Box } from "@chakra-ui/react";
-
           <Box py="2" {...props} as="div">Hello</Box>
       `,
       },
@@ -51,7 +48,7 @@ test("test", () => {
         errors: [{ messageId: "invalidOrder" }],
         output: `
           import { Box } from "@chakra-ui/react";
-          <Box as="div" key={key} m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
+          <Box key={key} as="div" m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
       `,
       },
       {
@@ -96,12 +93,68 @@ test("test", () => {
         name: "Same priority should be sorted in defined order",
         code: `
           import { Box } from "@chakra-ui/react";
-          <Box sx={sx} key={key} textStyle={textStyle} layerStyle={layerStyle} as={as}>Hello</Box>
+          <Box sx={sx} textStyle={textStyle} layerStyle={layerStyle} as={as}>Hello</Box>
         `,
         errors: [{ messageId: "invalidOrder" }],
         output: `
           import { Box } from "@chakra-ui/react";
-          <Box as={as} key={key} sx={sx} layerStyle={layerStyle} textStyle={textStyle}>Hello</Box>
+          <Box as={as} sx={sx} layerStyle={layerStyle} textStyle={textStyle}>Hello</Box>
+        `,
+      },
+      {
+        name: "Same priority should be sorted in defined order",
+        code: `
+        import { Box } from "@chakra-ui/react";
+        <Box
+          animation="animation"
+          appearance="appearance"
+          transform="transform"
+          transformOrigin="transformOrigin"
+          visibility="visibility"
+          whiteSpace="whiteSpace"
+          userSelect="userSelect"
+          pointerEvents="pointerEvents"
+          wordBreak="wordBreak"
+          overflowWrap="overflowWrap"
+          textOverflow="textOverflow"
+          boxSizing="boxSizing"
+          cursor="cursor"
+          resize="resize"
+          transition="transition"
+          objectFit="objectFit"
+          objectPosition="objectPosition"
+          float="float"
+          outline="outline"
+        >
+          Same priority should be sorted in defined order
+        </Box>;
+        `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+        import { Box } from "@chakra-ui/react";
+        <Box
+          animation="animation"
+          appearance="appearance"
+          transform="transform"
+          transformOrigin="transformOrigin"
+          visibility="visibility"
+          whiteSpace="whiteSpace"
+          userSelect="userSelect"
+          pointerEvents="pointerEvents"
+          wordBreak="wordBreak"
+          overflowWrap="overflowWrap"
+          textOverflow="textOverflow"
+          boxSizing="boxSizing"
+          cursor="cursor"
+          resize="resize"
+          transition="transition"
+          objectFit="objectFit"
+          objectPosition="objectPosition"
+          stroke="stroke"
+          outline="outline"
+        >
+          Same priority should be sorted in defined order
+        </Box>;
         `,
       },
       {
