@@ -1,6 +1,7 @@
 const priority = {
   // System
   System: 0,
+  ComponentSpecificProps: 1,
 
   // Positioning
   Position: 10,
@@ -39,8 +40,13 @@ type PriorityGroup = {
 const priorityGroups: readonly PriorityGroup[] = [
   {
     name: "System",
-    keys: ["as", "key", "sx", "layerStyle", "textStyle"],
+    keys: ["as", "sx", "layerStyle", "textStyle"],
     priority: priority["System"],
+  },
+  {
+    name: "ComponentSpecificProps",
+    keys: [], // TODO
+    priority: priority["ComponentSpecificProps"],
   },
   {
     name: "Margin",
@@ -334,7 +340,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "appearance",
       "transform",
       "transformOrigin",
-      "visiblity",
+      "visibility",
       "whiteSpace",
       "userSelect",
       "pointerEvents",
@@ -348,19 +354,34 @@ const priorityGroups: readonly PriorityGroup[] = [
       "objectFit",
       "objectPosition",
       "float",
-      "fill",
-      "stroke",
       "outline",
     ],
     priority: priority["Other Style Props"],
   },
 ];
 
-export function getPriority(key: string): number {
+const FIRST_PROPS = -1;
+const OTHER_PROPS = 1000;
+const LAST_PROPS = Number.MAX_SAFE_INTEGER;
+
+export function getPriority(key: string, config: { firstProps: string[]; lastProps: string[] }): number {
+  const { firstProps, lastProps } = config;
+
+  if (firstProps.includes(key)) {
+    return FIRST_PROPS;
+  }
+  if (lastProps.includes(key)) {
+    return LAST_PROPS;
+  }
+
   const index = priorityGroups.findIndex((group) => {
     return group.keys.includes(key);
   });
-  return index === -1 ? Number.MAX_SAFE_INTEGER : priorityGroups[index].priority;
+  if (index !== -1) {
+    return priorityGroups[index].priority;
+  }
+
+  return OTHER_PROPS;
 }
 
 export const priorityGroupsLength = priorityGroups.length;

@@ -105,9 +105,18 @@ const sortAttributes = (unsorted: (JSXAttribute | JSXSpreadAttribute)[]) => {
   return sorted;
 };
 
+// Temporarily placed here.
+const option: { firstProps?: string[]; lastProps?: string[] } = {};
+const defaultFirstProps = ["className", "key", "ref", "dangerouslySetInnerHtml"];
+const defaultLastProps: string[] = [];
+const config = {
+  firstProps: option.firstProps ? option.firstProps : defaultFirstProps,
+  lastProps: option.lastProps ? option.lastProps : defaultLastProps,
+};
+
 const compare = (a: JSXAttribute, b: JSXAttribute) => {
-  const aPriority = getPriority(a.name.name.toString());
-  const bPriority = getPriority(b.name.name.toString());
+  const aPriority = getPriority(a.name.name.toString(), config);
+  const bPriority = getPriority(b.name.name.toString(), config);
 
   if (aPriority !== bPriority) {
     return aPriority - bPriority;
@@ -116,11 +125,11 @@ const compare = (a: JSXAttribute, b: JSXAttribute) => {
   // Same Priority. Then compare it.
   const priority = aPriority;
   const order = priority <= priorityGroupsLength ? "predefined" : "alphabetical order";
+
   switch (order) {
     case "predefined": {
       const aIndex = getIndexInPriority(a.name.name.toString(), aPriority);
       const bIndex = getIndexInPriority(b.name.name.toString(), bPriority);
-
       return aIndex - bIndex;
     }
     case "alphabetical order":
