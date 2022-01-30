@@ -1,7 +1,6 @@
 type PriorityGroup = {
   name: string;
   keys: readonly string[];
-  isIncluded?: undefined;
 };
 
 const priorityGroups: readonly PriorityGroup[] = [
