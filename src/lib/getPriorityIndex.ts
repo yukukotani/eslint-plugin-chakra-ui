@@ -1,12 +1,46 @@
+const priority = {
+  // System
+  System: 0,
+
+  // Positioning
+  Position: 10,
+
+  // Box Model
+  Flexbox: 20,
+  "Grid Layout": 21,
+  Layout: 22,
+  Width: 23,
+  Height: 24,
+  Margin: 25,
+  Padding: 26,
+
+  // Typography
+  Color: 30,
+  Typography: 31,
+
+  // Visual
+  Background: 40,
+  Border: 41,
+  "Border Radius": 42,
+
+  // Misc
+  Shadow: 50,
+  Pseudo: 51,
+  "Other Style Props": 52,
+} as const;
+type Priority = typeof priority;
+
 type PriorityGroup = {
   name: string;
   keys: readonly string[];
+  priority: Priority[keyof Priority];
 };
 
 const priorityGroups: readonly PriorityGroup[] = [
   {
     name: "System",
     keys: ["as", "key", "sx", "layerStyle", "textStyle"],
+    priority: priority["System"],
   },
   {
     name: "Margin",
@@ -28,6 +62,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "mx",
       "my",
     ],
+    priority: priority["Margin"],
   },
   {
     name: "Padding",
@@ -49,10 +84,12 @@ const priorityGroups: readonly PriorityGroup[] = [
       "px",
       "py",
     ],
+    priority: priority["Padding"],
   },
   {
     name: "Color",
     keys: ["color", "textColor", "fill", "stroke"],
+    priority: priority["Color"],
   },
   {
     name: "Typography",
@@ -67,18 +104,22 @@ const priorityGroups: readonly PriorityGroup[] = [
       "textTransform",
       "textDecoration",
     ],
+    priority: priority["Typography"],
   },
   {
     name: "Width",
     keys: ["w", "width", "minW", "minWidth", "maxW", "maxWidth"],
+    priority: priority["Width"],
   },
   {
     name: "Height",
     keys: ["h", "height", "minH", "minHeight", "maxH", "maxHeight"],
+    priority: priority["Height"],
   },
   {
     name: "Layout",
     keys: ["d", "display", "boxSize", "verticalAlign", "overflow", "overflowX", "overflowY"],
+    priority: priority["Layout"],
   },
   {
     name: "Flexbox",
@@ -102,6 +143,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "alignSelf",
       "order",
     ],
+    priority: priority["Flexbox"],
   },
   {
     name: "Grid Layout",
@@ -131,6 +173,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "gridTemplateAreas",
       "templateAreas",
     ],
+    priority: priority["Grid Layout"],
   },
   {
     name: "Background",
@@ -152,6 +195,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "backgroundClip",
       "opacity",
     ],
+    priority: priority["Background"],
   },
   {
     name: "Border",
@@ -187,6 +231,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "borderX",
       "borderY",
     ],
+    priority: priority["Border"],
   },
   {
     name: "Border Radius",
@@ -207,14 +252,17 @@ const priorityGroups: readonly PriorityGroup[] = [
       "borderLeftRadius",
       "borderStartRadius",
     ],
+    priority: priority["Border Radius"],
   },
   {
     name: "Position",
     keys: ["pos", "position", "zIndex", "top", "right", "bottom", "left"],
+    priority: priority["Position"],
   },
   {
     name: "Shadow",
     keys: ["textShadow", "shadow", "boxShadow"],
+    priority: priority["Shadow"],
   },
   {
     name: "Pseudo",
@@ -277,6 +325,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "_dark",
       "_light",
     ],
+    priority: priority["Pseudo"],
   },
   {
     name: "Other Style Props",
@@ -303,25 +352,21 @@ const priorityGroups: readonly PriorityGroup[] = [
       "stroke",
       "outline",
     ],
+    priority: priority["Other Style Props"],
   },
 ];
 
-export function getPriorityIndex(key: string): number {
+export function getPriority(key: string): number {
   const index = priorityGroups.findIndex((group) => {
     return group.keys.includes(key);
   });
-  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+  return index === -1 ? Number.MAX_SAFE_INTEGER : priorityGroups[index].priority;
 }
 
 export const priorityGroupsLength = priorityGroups.length;
 
 export const getIndexInPriority = (key: string, groupIndex: number): number => {
   const keys = priorityGroups[groupIndex].keys;
-  if (keys) {
-    const index = keys.indexOf(key);
-    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
-  }
-
-  // If key doesn't exist, we cann't determine index.
-  return 0;
+  const index = keys.indexOf(key);
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
 };
