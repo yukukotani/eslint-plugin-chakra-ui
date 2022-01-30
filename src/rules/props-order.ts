@@ -124,7 +124,7 @@ const compare = (a: JSXAttribute, b: JSXAttribute) => {
 
   // Same Priority. Then compare it.
   const priority = aPriority;
-  const order = priority <= priorityGroupsLength ? "predefined" : "alphabetical order";
+  const order = priority < priorityGroupsLength ? "predefined" : "alphabetical order";
 
   switch (order) {
     case "predefined": {
