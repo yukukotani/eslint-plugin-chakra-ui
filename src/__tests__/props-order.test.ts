@@ -109,19 +109,19 @@ test("test", () => {
           animation="animation"
           appearance="appearance"
           transform="transform"
-          transformOrigin="transformOrigin"
           visibility="visibility"
+          resize="resize"
           whiteSpace="whiteSpace"
-          userSelect="userSelect"
           pointerEvents="pointerEvents"
           wordBreak="wordBreak"
           overflowWrap="overflowWrap"
           textOverflow="textOverflow"
           boxSizing="boxSizing"
+          transformOrigin="transformOrigin"
           cursor="cursor"
-          resize="resize"
           transition="transition"
           objectFit="objectFit"
+          userSelect="userSelect"
           objectPosition="objectPosition"
           float="float"
           outline="outline"
@@ -150,7 +150,7 @@ test("test", () => {
           transition="transition"
           objectFit="objectFit"
           objectPosition="objectPosition"
-          stroke="stroke"
+          float="float"
           outline="outline"
         >
           Same priority should be sorted in defined order
@@ -204,6 +204,32 @@ test("test", () => {
             _hover={_hover}
             animation={animation}
             data-test-id={dataTestId}
+          >
+            Hello
+          </Box>;
+        `,
+      },
+      {
+        name: "ReservedPriority should be sorted",
+        code: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            className={className}
+            key={key}
+            ref={ref}
+            dangerouslySetInnerHtml={dangerouslySetInnerHtml}
+          >
+            Hello
+          </Box>;
+        `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            className={className}
+            dangerouslySetInnerHtml={dangerouslySetInnerHtml}
+            key={key}
+            ref={ref}
           >
             Hello
           </Box>;

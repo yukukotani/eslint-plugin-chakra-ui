@@ -1,4 +1,5 @@
-const priority = {
+// priority range: 0~100
+const stylePropsPriority = {
   // System
   System: 0,
   ComponentSpecificProps: 1,
@@ -29,7 +30,7 @@ const priority = {
   Pseudo: 51,
   "Other Style Props": 52,
 } as const;
-type Priority = typeof priority;
+type Priority = typeof stylePropsPriority;
 
 type PriorityGroup = {
   name: string;
@@ -41,12 +42,12 @@ const priorityGroups: readonly PriorityGroup[] = [
   {
     name: "System",
     keys: ["as", "sx", "layerStyle", "textStyle"],
-    priority: priority["System"],
+    priority: stylePropsPriority["System"],
   },
   {
     name: "ComponentSpecificProps",
     keys: [], // TODO
-    priority: priority["ComponentSpecificProps"],
+    priority: stylePropsPriority["ComponentSpecificProps"],
   },
   {
     name: "Margin",
@@ -68,7 +69,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "mx",
       "my",
     ],
-    priority: priority["Margin"],
+    priority: stylePropsPriority["Margin"],
   },
   {
     name: "Padding",
@@ -90,12 +91,12 @@ const priorityGroups: readonly PriorityGroup[] = [
       "px",
       "py",
     ],
-    priority: priority["Padding"],
+    priority: stylePropsPriority["Padding"],
   },
   {
     name: "Color",
     keys: ["color", "textColor", "fill", "stroke"],
-    priority: priority["Color"],
+    priority: stylePropsPriority["Color"],
   },
   {
     name: "Typography",
@@ -110,22 +111,22 @@ const priorityGroups: readonly PriorityGroup[] = [
       "textTransform",
       "textDecoration",
     ],
-    priority: priority["Typography"],
+    priority: stylePropsPriority["Typography"],
   },
   {
     name: "Width",
     keys: ["w", "width", "minW", "minWidth", "maxW", "maxWidth"],
-    priority: priority["Width"],
+    priority: stylePropsPriority["Width"],
   },
   {
     name: "Height",
     keys: ["h", "height", "minH", "minHeight", "maxH", "maxHeight"],
-    priority: priority["Height"],
+    priority: stylePropsPriority["Height"],
   },
   {
     name: "Layout",
     keys: ["d", "display", "boxSize", "verticalAlign", "overflow", "overflowX", "overflowY"],
-    priority: priority["Layout"],
+    priority: stylePropsPriority["Layout"],
   },
   {
     name: "Flexbox",
@@ -149,7 +150,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "alignSelf",
       "order",
     ],
-    priority: priority["Flexbox"],
+    priority: stylePropsPriority["Flexbox"],
   },
   {
     name: "Grid Layout",
@@ -179,7 +180,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "gridTemplateAreas",
       "templateAreas",
     ],
-    priority: priority["Grid Layout"],
+    priority: stylePropsPriority["Grid Layout"],
   },
   {
     name: "Background",
@@ -201,7 +202,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "backgroundClip",
       "opacity",
     ],
-    priority: priority["Background"],
+    priority: stylePropsPriority["Background"],
   },
   {
     name: "Border",
@@ -237,7 +238,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "borderX",
       "borderY",
     ],
-    priority: priority["Border"],
+    priority: stylePropsPriority["Border"],
   },
   {
     name: "Border Radius",
@@ -258,17 +259,17 @@ const priorityGroups: readonly PriorityGroup[] = [
       "borderLeftRadius",
       "borderStartRadius",
     ],
-    priority: priority["Border Radius"],
+    priority: stylePropsPriority["Border Radius"],
   },
   {
     name: "Position",
     keys: ["pos", "position", "zIndex", "top", "right", "bottom", "left"],
-    priority: priority["Position"],
+    priority: stylePropsPriority["Position"],
   },
   {
     name: "Shadow",
     keys: ["textShadow", "shadow", "boxShadow"],
-    priority: priority["Shadow"],
+    priority: stylePropsPriority["Shadow"],
   },
   {
     name: "Pseudo",
@@ -331,7 +332,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "_dark",
       "_light",
     ],
-    priority: priority["Pseudo"],
+    priority: stylePropsPriority["Pseudo"],
   },
   {
     name: "Other Style Props",
@@ -356,37 +357,48 @@ const priorityGroups: readonly PriorityGroup[] = [
       "float",
       "outline",
     ],
-    priority: priority["Other Style Props"],
+    priority: stylePropsPriority["Other Style Props"],
   },
 ];
 
-const FIRST_PROPS = -1;
-const OTHER_PROPS = 1000;
-const LAST_PROPS = Number.MAX_SAFE_INTEGER;
+const ComponentSpecificPriority = {};
+
+const FIRST_PROPS_PRIORITY = -1;
+const OTHER_PROPS_PRIORITY = 100000;
+const LAST_PROPS_PRIORITY = Number.MAX_SAFE_INTEGER;
 
 export function getPriority(key: string, config: { firstProps: string[]; lastProps: string[] }): number {
   const { firstProps, lastProps } = config;
 
   if (firstProps.includes(key)) {
-    return FIRST_PROPS;
+    return FIRST_PROPS_PRIORITY;
   }
   if (lastProps.includes(key)) {
-    return LAST_PROPS;
+    return LAST_PROPS_PRIORITY;
   }
 
-  const index = priorityGroups.findIndex((group) => {
+  const groupIndex = priorityGroups.findIndex((group) => {
     return group.keys.includes(key);
   });
-  if (index !== -1) {
-    return priorityGroups[index].priority;
+
+  if (groupIndex > -1) {
+    const keyIndex = getIndexInGroup(key, groupIndex);
+    return calcPriorityFromIndex(groupIndex, keyIndex);
   }
 
-  return OTHER_PROPS;
+  return OTHER_PROPS_PRIORITY;
 }
+
+//
+const calcPriorityFromIndex = (groupIndex: number, indexInGroup: number) => {
+  const groupPriority = priorityGroups[groupIndex].priority;
+  const priorityInGroup = indexInGroup;
+  return groupPriority * 100 + priorityInGroup;
+};
 
 export const priorityGroupsLength = priorityGroups.length;
 
-export const getIndexInPriority = (key: string, groupIndex: number): number => {
+const getIndexInGroup = (key: string, groupIndex: number): number => {
   const keys = priorityGroups[groupIndex].keys;
   const index = keys.indexOf(key);
   return index === -1 ? Number.MAX_SAFE_INTEGER : index;
