@@ -269,6 +269,98 @@ test("test", () => {
           </Box>;
         `,
       },
+      {
+        name: "if keys are not reservedFirstProps, they should be sorted in alphabetical order",
+        code: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            className={className}
+            key={key}
+            ref={ref}
+            aria-label="aria-label"
+          >
+            Hello
+          </Box>;
+        `,
+        options: [
+          {
+            firstProps: [],
+          },
+        ],
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            aria-label="aria-label"
+            className={className}
+            key={key}
+            ref={ref}
+          >
+            Hello
+          </Box>;
+        `,
+      },
+      {
+        name: "if lastProps is specified, that must be the last.",
+        code: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            className={className}
+            onClick={onClick}
+            bg={bg}
+            aria-label="aria-label"
+          >
+            onClick should be the last
+          </Box>;
+        `,
+        options: [
+          {
+            lastProps: ["onClick", "aria-label"],
+          },
+        ],
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            className={className}
+            bg={bg}
+            onClick={onClick}
+            aria-label="aria-label"
+          >
+            onClick should be the last
+          </Box>;
+        `,
+      },
+      {
+        name: "if same property is set for both firstProps and lastProps, that of lastProps will be ignored.",
+        code: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            onClick={onClick}
+            bg={bg}
+            aria-label="aria-label"
+          >
+          If the same key is given different priorities in option, ignore all but the first.
+          </Box>;
+        `,
+        options: [
+          {
+            lastProps: ["onClick", "aria-label"],
+            firstProps: ["onClick", "aria-label"],
+          },
+        ],
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            onClick={onClick}
+            aria-label="aria-label"
+            bg={bg}
+          >
+          If the same key is given different priorities in option, ignore all but the first.
+          </Box>;
+        `,
+      },
     ],
   });
 });
