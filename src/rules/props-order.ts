@@ -3,7 +3,24 @@ import { isChakraElement } from "../lib/isChakraElement";
 import { getPriority } from "../lib/getPriorityIndex";
 import { JSXAttribute, JSXSpreadAttribute } from "@typescript-eslint/types/dist/ast-spec";
 
-export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
+type Options = [
+  {
+    firstProps?: string[];
+    lastProps?: string[];
+    compPropsBeforeStyleProps?: boolean;
+  }
+];
+
+export type Config = {
+  firstProps: string[];
+  lastProps: string[];
+  isCompPropsBeforeStyleProps: boolean;
+  componentSpecificProps: string[] | undefined;
+};
+const defaultFirstProps = ["className", "key", "ref", "dangerouslySetInnerHtml"];
+const defaultLastProps: string[] = [];
+
+export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
   meta: {
     type: "suggestion",
     docs: {
@@ -14,14 +31,35 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
     messages: {
       invalidOrder: "Invalid Chakra props order.",
     },
-    schema: [],
+    schema: [
+      {
+        type: "object",
+        properties: {
+          firstProps: {
+            type: "array",
+            items: { type: "string", minLength: 0 },
+            uniqueItems: true,
+          },
+          lastProps: {
+            type: "array",
+            items: { type: "string", minLength: 0 },
+            uniqueItems: true,
+          },
+          compPropsBeforeStyleProps: {
+            type: "boolean",
+            default: false,
+          },
+        },
+      },
+    ],
     fixable: "code",
   },
 
-  create: ({ parserServices, report, getSourceCode }) => {
+  create: ({ parserServices, report, getSourceCode, options }) => {
     if (!parserServices) {
       return {};
     }
+    const option = options[0];
 
     return {
       JSXOpeningElement(node) {
@@ -29,7 +67,13 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", []> = {
           return;
         }
 
-        const sorted = sortAttributes(node.attributes);
+        const config: Config = {
+          firstProps: option?.firstProps ? option?.firstProps : defaultFirstProps,
+          lastProps: option?.lastProps ? option?.lastProps : defaultLastProps,
+          isCompPropsBeforeStyleProps: true,
+          componentSpecificProps: undefined, // not supported yet
+        };
+        const sorted = sortAttributes(node.attributes, config);
 
         const sourceCode = getSourceCode();
         for (const [index, attribute] of node.attributes.entries()) {
@@ -66,11 +110,11 @@ const areAllJSXAttribute = (attributes: (JSXAttribute | JSXSpreadAttribute)[]): 
   return attributes.every((attribute) => attribute.type === AST_NODE_TYPES.JSXAttribute);
 };
 
-const sortAttributes = (unsorted: (JSXAttribute | JSXSpreadAttribute)[]) => {
+const sortAttributes = (unsorted: (JSXAttribute | JSXSpreadAttribute)[], config: Config) => {
   const noSpread = areAllJSXAttribute(unsorted);
 
   if (noSpread) {
-    const sorted = [...unsorted].sort((a, b) => compare(a, b));
+    const sorted = [...unsorted].sort((a, b) => compare(a, b, config));
     return sorted;
   }
 
@@ -85,7 +129,7 @@ const sortAttributes = (unsorted: (JSXAttribute | JSXSpreadAttribute)[]) => {
       if (start < end) {
         // Sort sections which don't have JSXSpreadAttribute.
         const sectionToSort = unsorted.slice(start, end) as JSXAttribute[];
-        const sectionSorted = sectionToSort.sort((a, b) => compare(a, b));
+        const sectionSorted = sectionToSort.sort((a, b) => compare(a, b, config));
         sorted = sorted.concat(sectionSorted);
       }
       // JSXSpreadAttribute will be pushed as is.
@@ -97,7 +141,7 @@ const sortAttributes = (unsorted: (JSXAttribute | JSXSpreadAttribute)[]) => {
       end = i + 1;
       if (start < end) {
         const sectionToSort = unsorted.slice(start, end) as JSXAttribute[];
-        const sectionSorted = sectionToSort.sort((a, b) => compare(a, b));
+        const sectionSorted = sectionToSort.sort((a, b) => compare(a, b, config));
         sorted = sorted.concat(sectionSorted);
       }
     }
@@ -105,16 +149,7 @@ const sortAttributes = (unsorted: (JSXAttribute | JSXSpreadAttribute)[]) => {
   return sorted;
 };
 
-// Temporarily placed here.
-const option: { firstProps?: string[]; lastProps?: string[] } = {};
-const defaultFirstProps = ["className", "key", "ref", "dangerouslySetInnerHtml"];
-const defaultLastProps: string[] = [];
-const config = {
-  firstProps: option.firstProps ? option.firstProps : defaultFirstProps,
-  lastProps: option.lastProps ? option.lastProps : defaultLastProps,
-};
-
-const compare = (a: JSXAttribute, b: JSXAttribute) => {
+const compare = (a: JSXAttribute, b: JSXAttribute, config: Config) => {
   const aPriority = getPriority(a.name.name.toString(), config);
   const bPriority = getPriority(b.name.name.toString(), config);
 

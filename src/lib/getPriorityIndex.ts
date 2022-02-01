@@ -1,3 +1,5 @@
+import type { Config } from "../rules/props-order";
+
 // priority range: 0~100
 const stylePropsPriority = {
   // System
@@ -355,26 +357,24 @@ const priorityGroups: readonly PriorityGroup[] = [
   },
 ];
 
-export function getPriority(
-  key: string,
-  config: { firstProps: string[]; lastProps: string[]; componentSpecProps?: string[] }
-): number {
-  const { firstProps, lastProps, componentSpecProps } = config;
-
+export function getPriority(key: string, config: Config): number {
+  // getPriority returns a number. The smaller is the heigher priority.
+  // Properties will have their "group priority", determined by which group property belongs, and "inGroup priority", determined by index in that group.
+  const { firstProps, lastProps, componentSpecificProps } = config;
   const indexInFirstProps = firstProps.indexOf(key);
   const indexInLastProps = lastProps.indexOf(key);
 
   if (indexInFirstProps !== -1) {
-    return calcPriorityFromIndex({ type: "reservedFirstProps", value: indexInFirstProps });
+    return calcPriorityFromIndex({ type: "reservedFirstProps", value: indexInFirstProps }, config);
   }
   if (indexInLastProps !== -1) {
-    return calcPriorityFromIndex({ type: "reservedLastProps", value: indexInLastProps });
+    return calcPriorityFromIndex({ type: "reservedLastProps", value: indexInLastProps }, config);
   }
 
-  if (componentSpecProps) {
-    const index = componentSpecProps.indexOf(key);
+  if (componentSpecificProps) {
+    const index = componentSpecificProps.indexOf(key);
     if (index !== -1) {
-      return calcPriorityFromIndex({ type: "componentSpecificProps", value: index });
+      return calcPriorityFromIndex({ type: "componentSpecificProps", value: index }, config);
     }
   }
 
@@ -386,10 +386,10 @@ export function getPriority(
   const isStyleProps = groupIndex > -1;
   if (isStyleProps) {
     const keyIndex = getIndexInGroup(key, groupIndex);
-    return calcPriorityFromIndex({ type: "styleProps", groupIndex, keyIndex });
+    return calcPriorityFromIndex({ type: "styleProps", groupIndex, keyIndex }, config);
   }
 
-  return calcPriorityFromIndex({ type: "otherProps" });
+  return calcPriorityFromIndex({ type: "otherProps" }, config);
 }
 
 type Index =
@@ -397,20 +397,27 @@ type Index =
   | { type: "styleProps"; groupIndex: number; keyIndex: number }
   | { type: "otherProps" };
 
-const calcPriorityFromIndex = (index: Index) => {
+const calcPriorityFromIndex = (index: Index, config: Config) => {
+  // Calculates the priority in which every property has different priority.
+  // As an exception, non-predefined properties have the same precedence.
+  // They will be treated as "other Props".
+
+  // Currently, the priority is determined from the index of the array.
+  // We assume that the length of each array is atmost 100.
+  // When changing the specification, be sure to check that the stylePropsPriority range does not overlap with others.
+  // Now it's range is [200, 10200]. 10200 is 100 * 100 + 200.
+
   // Perhaps we may want to handle -1 as error in some future.
   // Therefore I set the priority to numbers greater than or equal to zero.
-  const isComponentSpecBeforeStyle = false;
+  const isComponentSpecBeforeStyle = config.isCompPropsBeforeStyleProps;
   const basePriorities = {
     firstProps: 0,
-    // We assume each array has atmost 100 items.
-    // When changing the specification, be sure to check that the stylePropsPriority range does not overlap with others.
-    // Now it is [200, 10200]. 10200 is 100 * 100 + 200
     styleProps: 200,
     componentSpecificProps: isComponentSpecBeforeStyle ? 100 : 10 * 5,
     otherProps: 10 ** 6,
     lastProps: 10 ** 6 + 1,
   };
+
   switch (index.type) {
     case "reservedFirstProps": {
       const groupPriority = basePriorities.firstProps;
