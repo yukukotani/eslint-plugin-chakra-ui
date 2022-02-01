@@ -34,7 +34,15 @@ test("test", () => {
         name: "Spreading should not be sorted",
         code: `
           import { Box } from "@chakra-ui/react";
-          <Box py="2" {...props} as="div">Hello</Box>
+          <Box py="2" {...props} as="div">Hello</Box>;
+      `,
+      },
+      {
+        name: "Last priority of style props should be placed before `other props`",
+        // priorityGroups.at(-1).at(-1) is outline;
+        code: `
+          import { Box } from "@chakra-ui/react";
+          <Box outline='outline' aaaa>Hello</Box>;
       `,
       },
     ],
@@ -214,10 +222,10 @@ test("test", () => {
         code: `
           import { Box } from "@chakra-ui/react";
           <Box
-            className={className}
             key={key}
-            ref={ref}
+            className={className}
             dangerouslySetInnerHtml={dangerouslySetInnerHtml}
+            ref={ref}
           >
             Hello
           </Box>;
@@ -227,9 +235,35 @@ test("test", () => {
           import { Box } from "@chakra-ui/react";
           <Box
             className={className}
-            dangerouslySetInnerHtml={dangerouslySetInnerHtml}
             key={key}
             ref={ref}
+            dangerouslySetInnerHtml={dangerouslySetInnerHtml}
+          >
+            Hello
+          </Box>;
+        `,
+      },
+      {
+        name: "ReservedPriority should be sorted",
+        code: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            aria-label="aria-label"
+            // variant={variant}
+            className={className}
+            p={p}
+          >
+            Hello
+          </Box>;
+        `,
+        errors: [{ messageId: "invalidOrder" }],
+        output: `
+          import { Box } from "@chakra-ui/react";
+          <Box
+            className={className}
+            // variant={variant}
+            p={p}
+            aria-label="aria-label"
           >
             Hello
           </Box>;

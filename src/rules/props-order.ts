@@ -123,9 +123,9 @@ const compare = (a: JSXAttribute, b: JSXAttribute) => {
   }
 
   // Same Priority. Then compare it.
-  const order = "alphabetical order";
+  const ordering = "alphabetical order";
 
-  switch (order) {
+  switch (ordering) {
     case "alphabetical order":
       return a.name.name < b.name.name ? -1 : 1;
   }
