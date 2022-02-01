@@ -2,7 +2,6 @@
 const stylePropsPriority = {
   // System
   System: 0,
-  ComponentSpecificProps: 1,
 
   // Positioning
   Position: 10,
@@ -43,11 +42,6 @@ const priorityGroups: readonly PriorityGroup[] = [
     name: "System",
     keys: ["as", "sx", "layerStyle", "textStyle"],
     priority: stylePropsPriority["System"],
-  },
-  {
-    name: "ComponentSpecificProps",
-    keys: [], // TODO
-    priority: stylePropsPriority["ComponentSpecificProps"],
   },
   {
     name: "Margin",
@@ -361,20 +355,30 @@ const priorityGroups: readonly PriorityGroup[] = [
   },
 ];
 
-export function getPriority(key: string, config: { firstProps: string[]; lastProps: string[] }): number {
-  const { firstProps, lastProps } = config;
+export function getPriority(
+  key: string,
+  config: { firstProps: string[]; lastProps: string[]; componentSpecProps?: string[] }
+): number {
+  const { firstProps, lastProps, componentSpecProps } = config;
 
   const indexInFirstProps = firstProps.indexOf(key);
   const indexInLastProps = lastProps.indexOf(key);
 
   if (indexInFirstProps !== -1) {
-    return calcPriorityFromIndex("reservedFirstProps", 0, 0);
+    return calcPriorityFromIndex({ type: "reservedFirstProps", value: indexInFirstProps });
   }
   if (indexInLastProps !== -1) {
-    return calcPriorityFromIndex("reservedLastProps", 0, 0);
+    return calcPriorityFromIndex({ type: "reservedLastProps", value: indexInLastProps });
   }
 
-  // it can be either `stylePropsPriority` or `otherPropsPriority`
+  if (componentSpecProps) {
+    const index = componentSpecProps.indexOf(key);
+    if (index !== -1) {
+      return calcPriorityFromIndex({ type: "componentSpecificProps", value: index });
+    }
+  }
+
+  // Then it can be either `stylePropsPriority` or `otherPropsPriority`
   const groupIndex = priorityGroups.findIndex((group) => {
     return group.keys.includes(key);
   });
@@ -382,63 +386,70 @@ export function getPriority(key: string, config: { firstProps: string[]; lastPro
   const isStyleProps = groupIndex > -1;
   if (isStyleProps) {
     const keyIndex = getIndexInGroup(key, groupIndex);
-    return calcPriorityFromIndex("styleProps", groupIndex, keyIndex);
+    return calcPriorityFromIndex({ type: "styleProps", groupIndex, keyIndex });
   }
 
-  return calcPriorityFromIndex("otherProps", 0, 0);
+  return calcPriorityFromIndex({ type: "otherProps" });
 }
 
-type priprityType = "reservedFirstProps" | "styleProps" | "componentSpecificProps" | "otherProps" | "reservedLastProps";
-const calcPriorityFromIndex = (type: priprityType, groupIndex: number, indexInGroup: number) => {
-  // Perhaps we may want to recieve -1 as error in some future.
-  // Therefore I set the priority to numbers greater than or equal to zero.
+type Index =
+  | { type: "reservedFirstProps" | "componentSpecificProps" | "reservedLastProps"; value: number }
+  | { type: "styleProps"; groupIndex: number; keyIndex: number }
+  | { type: "otherProps" };
 
+const calcPriorityFromIndex = (index: Index) => {
+  // Perhaps we may want to handle -1 as error in some future.
+  // Therefore I set the priority to numbers greater than or equal to zero.
+  const isComponentSpecBeforeStyle = false;
   const basePriorities = {
     firstProps: 0,
-    styleProps: 100,
-    componentSpecificProps: 10 * 5,
+    // We assume each array has atmost 100 items.
+    // When changing the specification, be sure to check that the stylePropsPriority range does not overlap with others.
+    // Now it is [200, 10200]. 10200 is 100 * 100 + 200
+    styleProps: 200,
+    componentSpecificProps: isComponentSpecBeforeStyle ? 100 : 10 * 5,
     otherProps: 10 ** 6,
-    lastProps: Number.MAX_SAFE_INTEGER,
+    lastProps: 10 ** 6 + 1,
   };
-  switch (type) {
+  switch (index.type) {
     case "reservedFirstProps": {
-      const basePriority = basePriorities.firstProps;
-      // We assume reservedFirstProps.length < 100
+      const groupPriority = basePriorities.firstProps;
+      const InGroupPriority = index.value;
 
-      return basePriority;
+      return groupPriority + InGroupPriority;
     }
     case "styleProps": {
+      const { groupIndex, keyIndex } = index;
       const basePriority = basePriorities.styleProps;
       const groupPriority = priorityGroups[groupIndex].priority;
-      const priorityInGroup = indexInGroup;
+      const InGroupPriority = keyIndex;
 
       // By useing the following formula, we can assign a unique priority to each props of style props.
       // Justification: Since priorityGroups[**].length is less than 100, there is no duplicate.
-      return basePriority + groupPriority * 100 + priorityInGroup;
+      return basePriority + groupPriority * 100 + InGroupPriority;
     }
     case "componentSpecificProps": {
-      const basePriority = basePriorities.componentSpecificProps;
-      return basePriority;
+      const groupPriority = basePriorities.componentSpecificProps;
+      return groupPriority;
     }
     case "otherProps": {
-      const basePriority = basePriorities.otherProps;
-      return basePriority;
+      const groupPriority = basePriorities.otherProps;
+      // This will always return same priority value. It needs non-priority-based sorting.
+      return groupPriority;
     }
     case "reservedLastProps": {
-      const basePriority = basePriorities.lastProps;
-      return basePriority;
+      const groupPriority = basePriorities.lastProps;
+      const InGroupPriority = index.value;
+      return groupPriority + InGroupPriority;
     }
     default: {
-      const _x: never = type;
+      const _x: never = index;
       return -1;
     }
   }
 };
 
-export const priorityGroupsLength = priorityGroups.length;
-
 const getIndexInGroup = (key: string, groupIndex: number): number => {
   const keys = priorityGroups[groupIndex].keys;
-  const index = keys.indexOf(key);
-  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+  return keys.indexOf(key);
 };
