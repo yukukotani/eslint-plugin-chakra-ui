@@ -71,7 +71,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
         const config: Config = {
           firstProps: option?.firstProps ? option?.firstProps : defaultFirstProps,
           lastProps: option?.lastProps ? option?.lastProps : defaultLastProps,
-          isCompPropsBeforeStyleProps: true, // options?.defaultIsCompPropsBeforeStyleProps ? ~ : defaultLastProps
+          isCompPropsBeforeStyleProps: true, // options?.displayCompPropsBeforeStyleProps ? ~ : defaultIsCompPropsBeforeStyleProps
           componentSpecificProps: undefined, // not supported yet
         };
         const sorted = sortAttributes(node.attributes, config);
