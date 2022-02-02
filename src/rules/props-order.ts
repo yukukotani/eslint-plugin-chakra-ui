@@ -7,7 +7,7 @@ type Options = [
   {
     firstProps?: string[];
     lastProps?: string[];
-    compPropsBeforeStyleProps?: boolean;
+    displayCompPropsBeforeStyleProps?: boolean;
   }
 ];
 
@@ -19,6 +19,7 @@ export type Config = {
 };
 const defaultFirstProps = ["className", "key", "ref", "dangerouslySetInnerHtml"];
 const defaultLastProps: string[] = [];
+// const defaultIsCompPropsBeforeStyleProps = false;
 
 export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
   meta: {
@@ -45,7 +46,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
             items: { type: "string", minLength: 0 },
             uniqueItems: true,
           },
-          compPropsBeforeStyleProps: {
+          displayCompPropsBeforeStyleProps: {
             type: "boolean",
             default: false,
           },
@@ -70,7 +71,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
         const config: Config = {
           firstProps: option?.firstProps ? option?.firstProps : defaultFirstProps,
           lastProps: option?.lastProps ? option?.lastProps : defaultLastProps,
-          isCompPropsBeforeStyleProps: true,
+          isCompPropsBeforeStyleProps: true, // options?.defaultIsCompPropsBeforeStyleProps ? ~ : defaultLastProps
           componentSpecificProps: undefined, // not supported yet
         };
         const sorted = sortAttributes(node.attributes, config);
