@@ -412,10 +412,10 @@ const calcPriorityFromIndex = (index: Index, config: Config) => {
   const isComponentSpecBeforeStyle = config.isCompPropsBeforeStyleProps;
   const basePriorities = {
     firstProps: 0,
-    styleProps: 200,
-    componentSpecificProps: isComponentSpecBeforeStyle ? 100 : 10 * 5,
-    otherProps: 10 ** 6,
-    lastProps: 10 ** 6 + 1,
+    styleProps: 20000,
+    componentSpecificProps: isComponentSpecBeforeStyle ? 10000 : 30000,
+    otherProps: 40000,
+    lastProps: 50000,
   };
 
   switch (index.type) {
@@ -431,7 +431,7 @@ const calcPriorityFromIndex = (index: Index, config: Config) => {
       const groupPriority = priorityGroups[groupIndex].priority;
       const InGroupPriority = keyIndex;
 
-      // By useing the following formula, we can assign a unique priority to each props of style props.
+      // By using the following formula, we can assign a unique priority to each props of style props.
       // Justification: Since priorityGroups[**].length is less than 100, there is no duplicate.
       return basePriority + groupPriority * 100 + InGroupPriority;
     }
