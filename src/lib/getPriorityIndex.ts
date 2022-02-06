@@ -1,12 +1,49 @@
+import type { Config } from "../rules/props-order";
+
+// priority range: 0~100
+const stylePropsPriority = {
+  // System
+  System: 0,
+
+  // Positioning
+  Position: 10,
+
+  // Box Model
+  Flexbox: 20,
+  "Grid Layout": 21,
+  Layout: 22,
+  Width: 23,
+  Height: 24,
+  Margin: 25,
+  Padding: 26,
+
+  // Typography
+  Color: 30,
+  Typography: 31,
+
+  // Visual
+  Background: 40,
+  Border: 41,
+  "Border Radius": 42,
+
+  // Misc
+  Shadow: 50,
+  Pseudo: 51,
+  "Other Style Props": 52,
+} as const;
+type Priority = typeof stylePropsPriority;
+
 type PriorityGroup = {
   name: string;
   keys: readonly string[];
+  priority: Priority[keyof Priority];
 };
 
 const priorityGroups: readonly PriorityGroup[] = [
   {
     name: "System",
-    keys: ["as", "key", "sx", "layerStyle", "textStyle"],
+    keys: ["as", "sx", "layerStyle", "textStyle"],
+    priority: stylePropsPriority["System"],
   },
   {
     name: "Margin",
@@ -28,6 +65,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "mx",
       "my",
     ],
+    priority: stylePropsPriority["Margin"],
   },
   {
     name: "Padding",
@@ -49,10 +87,12 @@ const priorityGroups: readonly PriorityGroup[] = [
       "px",
       "py",
     ],
+    priority: stylePropsPriority["Padding"],
   },
   {
     name: "Color",
     keys: ["color", "textColor", "fill", "stroke"],
+    priority: stylePropsPriority["Color"],
   },
   {
     name: "Typography",
@@ -67,18 +107,22 @@ const priorityGroups: readonly PriorityGroup[] = [
       "textTransform",
       "textDecoration",
     ],
+    priority: stylePropsPriority["Typography"],
   },
   {
     name: "Width",
     keys: ["w", "width", "minW", "minWidth", "maxW", "maxWidth"],
+    priority: stylePropsPriority["Width"],
   },
   {
     name: "Height",
     keys: ["h", "height", "minH", "minHeight", "maxH", "maxHeight"],
+    priority: stylePropsPriority["Height"],
   },
   {
     name: "Layout",
     keys: ["d", "display", "boxSize", "verticalAlign", "overflow", "overflowX", "overflowY"],
+    priority: stylePropsPriority["Layout"],
   },
   {
     name: "Flexbox",
@@ -102,6 +146,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "alignSelf",
       "order",
     ],
+    priority: stylePropsPriority["Flexbox"],
   },
   {
     name: "Grid Layout",
@@ -131,6 +176,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "gridTemplateAreas",
       "templateAreas",
     ],
+    priority: stylePropsPriority["Grid Layout"],
   },
   {
     name: "Background",
@@ -152,6 +198,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "backgroundClip",
       "opacity",
     ],
+    priority: stylePropsPriority["Background"],
   },
   {
     name: "Border",
@@ -187,6 +234,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "borderX",
       "borderY",
     ],
+    priority: stylePropsPriority["Border"],
   },
   {
     name: "Border Radius",
@@ -207,14 +255,17 @@ const priorityGroups: readonly PriorityGroup[] = [
       "borderLeftRadius",
       "borderStartRadius",
     ],
+    priority: stylePropsPriority["Border Radius"],
   },
   {
     name: "Position",
     keys: ["pos", "position", "zIndex", "top", "right", "bottom", "left"],
+    priority: stylePropsPriority["Position"],
   },
   {
     name: "Shadow",
     keys: ["textShadow", "shadow", "boxShadow"],
+    priority: stylePropsPriority["Shadow"],
   },
   {
     name: "Pseudo",
@@ -277,6 +328,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "_dark",
       "_light",
     ],
+    priority: stylePropsPriority["Pseudo"],
   },
   {
     name: "Other Style Props",
@@ -285,7 +337,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "appearance",
       "transform",
       "transformOrigin",
-      "visiblity",
+      "visibility",
       "whiteSpace",
       "userSelect",
       "pointerEvents",
@@ -299,29 +351,108 @@ const priorityGroups: readonly PriorityGroup[] = [
       "objectFit",
       "objectPosition",
       "float",
-      "fill",
-      "stroke",
       "outline",
     ],
+    priority: stylePropsPriority["Other Style Props"],
   },
 ];
 
-export function getPriorityIndex(key: string): number {
-  const index = priorityGroups.findIndex((group) => {
-    return group.keys.includes(key);
-  });
-  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
-}
+export function getPriority(key: string, config: Config): number {
+  // getPriority returns a number. The smaller is the higher priority.
+  // Properties will have their "group priority", determined by which group property belongs, and "inGroup priority", determined by index in that group.
+  const { firstProps, lastProps, componentSpecificProps } = config;
+  const indexInFirstProps = firstProps.indexOf(key);
+  const indexInLastProps = lastProps.indexOf(key);
 
-export const priorityGroupsLength = priorityGroups.length;
-
-export const getIndexInPriority = (key: string, groupIndex: number): number => {
-  const keys = priorityGroups[groupIndex].keys;
-  if (keys) {
-    const index = keys.indexOf(key);
-    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+  if (indexInFirstProps !== -1) {
+    return calcPriorityFromIndex({ type: "reservedFirstProps", value: indexInFirstProps }, config);
+  }
+  if (indexInLastProps !== -1) {
+    return calcPriorityFromIndex({ type: "reservedLastProps", value: indexInLastProps }, config);
   }
 
-  // If key doesn't exist, we cann't determine index.
-  return 0;
+  if (componentSpecificProps) {
+    const index = componentSpecificProps.indexOf(key);
+    if (index !== -1) {
+      return calcPriorityFromIndex({ type: "componentSpecificProps", value: index }, config);
+    }
+  }
+
+  // Then it can be either `stylePropsPriority` or `otherPropsPriority`
+  const groupIndex = priorityGroups.findIndex((group) => {
+    return group.keys.includes(key);
+  });
+
+  const isStyleProps = groupIndex > -1;
+  if (isStyleProps) {
+    const keyIndex = getIndexInGroup(key, groupIndex);
+    return calcPriorityFromIndex({ type: "styleProps", groupIndex, keyIndex }, config);
+  }
+
+  return calcPriorityFromIndex({ type: "otherProps" }, config);
+}
+
+type Index =
+  | { type: "reservedFirstProps" | "componentSpecificProps" | "reservedLastProps"; value: number }
+  | { type: "styleProps"; groupIndex: number; keyIndex: number }
+  | { type: "otherProps" };
+
+const calcPriorityFromIndex = (index: Index, config: Config) => {
+  // Calculates the priority in which every property has different priority.
+  // As an exception, non-predefined properties have the same precedence.
+  // They will be treated as "other Props".
+
+  // Currently, the priority is determined from the index of the array.
+  // We assume that the length of each array is at most 100.
+  // When changing the specification, be sure to check that the stylePropsPriority range does not overlap with others.
+  // Now it's range is [200, 10200]. 10200 is 100 * 100 + 200.
+
+  // Perhaps we may want to handle -1 as error in some future.
+  // Therefore I set the priority to numbers greater than or equal to zero.
+  const isComponentSpecBeforeStyle = config.isCompPropsBeforeStyleProps;
+  const basePriorities = {
+    firstProps: 0,
+    styleProps: 20000,
+    componentSpecificProps: isComponentSpecBeforeStyle ? 10000 : 30000,
+    otherProps: 40000,
+    lastProps: 50000,
+  };
+
+  switch (index.type) {
+    case "reservedFirstProps": {
+      const groupPriority = basePriorities.firstProps;
+      const InGroupPriority = index.value;
+
+      return groupPriority + InGroupPriority;
+    }
+    case "styleProps": {
+      const { groupIndex, keyIndex } = index;
+      const basePriority = basePriorities.styleProps;
+      const groupPriority = priorityGroups[groupIndex].priority;
+      const InGroupPriority = keyIndex;
+
+      // By using the following formula, we can assign a unique priority to each props of style props.
+      // Justification: Since priorityGroups[**].length is less than 100, there is no duplicate.
+      return basePriority + groupPriority * 100 + InGroupPriority;
+    }
+    case "componentSpecificProps": {
+      const groupPriority = basePriorities.componentSpecificProps;
+      return groupPriority;
+    }
+    case "otherProps": {
+      const groupPriority = basePriorities.otherProps;
+      // This will always return same priority value. It needs non-priority-based sorting.
+      return groupPriority;
+    }
+    case "reservedLastProps": {
+      const groupPriority = basePriorities.lastProps;
+      const InGroupPriority = index.value;
+      return groupPriority + InGroupPriority;
+    }
+  }
+};
+
+const getIndexInGroup = (key: string, groupIndex: number): number => {
+  const keys = priorityGroups[groupIndex].keys;
+  return keys.indexOf(key);
 };
