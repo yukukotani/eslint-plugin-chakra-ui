@@ -449,10 +449,6 @@ const calcPriorityFromIndex = (index: Index, config: Config) => {
       const InGroupPriority = index.value;
       return groupPriority + InGroupPriority;
     }
-    default: {
-      const _x: never = index;
-      return -1;
-    }
   }
 };
 
