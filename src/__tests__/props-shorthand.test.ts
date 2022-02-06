@@ -103,6 +103,26 @@ test("test", () => {
           </>
       `,
       },
+      {
+        name: "Support JSXSpreadAttribute",
+        code: `
+          import { Grid, Flex } from "@chakra-ui/react";
+            
+          <>
+            <Grid {...{w:2}} gridGap={2}>Hello</Grid>
+            <Flex {...{w:2}} gridGap={2} justifyContent="center">Hello</Flex>
+          </>
+      `,
+        errors: [{ messageId: "enforcesShorthand" }, { messageId: "enforcesShorthand" }],
+        output: `
+          import { Grid, Flex } from "@chakra-ui/react";
+            
+          <>
+            <Grid {...{w:2}} gap={2}>Hello</Grid>
+            <Flex {...{w:2}} gridGap={2} justify="center">Hello</Flex>
+          </>
+      `,
+      },
     ],
   });
 });

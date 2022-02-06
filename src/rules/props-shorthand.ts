@@ -49,7 +49,7 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
 
           for (const attribute of node.attributes) {
             if (attribute.type !== AST_NODE_TYPES.JSXAttribute) {
-              return;
+              continue;
             }
 
             const sourceCode = getSourceCode();
