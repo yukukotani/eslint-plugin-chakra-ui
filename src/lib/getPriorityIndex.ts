@@ -1,6 +1,6 @@
 import type { Config } from "../rules/props-order";
 
-// priority range: 0~100
+// priority range: 0 <= x < 100
 const stylePropsPriority = {
   // System
   System: 0,
@@ -79,7 +79,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "pe",
       "paddingEnd",
       "pb",
-      "paddingBotto",
+      "paddingButton",
       "pl",
       "paddingLeft",
       "ps",
@@ -359,7 +359,9 @@ const priorityGroups: readonly PriorityGroup[] = [
 
 export function getPriority(key: string, config: Config): number {
   // getPriority returns a number. The smaller is the higher priority.
-  // Properties will have their "group priority", determined by which group property belongs, and "inGroup priority", determined by index in that group.
+  // Internally, each property should have 2 priorities.
+  // One is its "group priority", determined by which group property belongs,
+  // and the other is its "inGroup priority", determined by index in that group.
   const { firstProps, lastProps, componentSpecificProps } = config;
   const indexInFirstProps = firstProps.indexOf(key);
   const indexInLastProps = lastProps.indexOf(key);
@@ -398,14 +400,14 @@ type Index =
   | { type: "otherProps" };
 
 const calcPriorityFromIndex = (index: Index, config: Config) => {
-  // Calculates the priority in which every property has different priority.
-  // As an exception, non-predefined properties have the same precedence.
+  // This calculates the priority, in which every property has different priority.
+  // As an exception, non-predefined properties have the same priority.
   // They will be treated as "other Props".
 
   // Currently, the priority is determined from the index of the array.
   // We assume that the length of each array is at most 100.
   // When changing the specification, be sure to check that the stylePropsPriority range does not overlap with others.
-  // Now it's range is [200, 10200]. 10200 is 100 * 100 + 200.
+  // Now its range is 20000 <= x < 30000;
 
   // Perhaps we may want to handle -1 as error in some future.
   // Therefore I set the priority to numbers greater than or equal to zero.
