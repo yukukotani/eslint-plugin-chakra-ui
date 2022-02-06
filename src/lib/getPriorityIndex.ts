@@ -358,7 +358,7 @@ const priorityGroups: readonly PriorityGroup[] = [
 ];
 
 export function getPriority(key: string, config: Config): number {
-  // getPriority returns a number. The smaller is the heigher priority.
+  // getPriority returns a number. The smaller is the higher priority.
   // Properties will have their "group priority", determined by which group property belongs, and "inGroup priority", determined by index in that group.
   const { firstProps, lastProps, componentSpecificProps } = config;
   const indexInFirstProps = firstProps.indexOf(key);
