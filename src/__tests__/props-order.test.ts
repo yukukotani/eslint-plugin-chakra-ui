@@ -86,7 +86,7 @@ test("test", () => {
             `,
       },
       {
-        name: "Non chakra props should be sorted in alphabetical order",
+        name: "`Other Props` should be sorted in alphabetical order",
         code: `
           import { Box } from "@chakra-ui/react";
           <Box onClick={onClick} data-test-id="data-test-id" data-index={1}>Hello</Box>
@@ -98,7 +98,7 @@ test("test", () => {
         `,
       },
       {
-        name: "Same priority should be sorted in defined order",
+        name: "`Style Props` of same group should be sorted in defined order, not alphabetical",
         code: `
           import { Box } from "@chakra-ui/react";
           <Box sx={sx} textStyle={textStyle} layerStyle={layerStyle} as={as}>Hello</Box>
@@ -110,7 +110,7 @@ test("test", () => {
         `,
       },
       {
-        name: "Same priority should be sorted in defined order",
+        name: "`Style Props` of same group should be sorted in defined order, not alphabetical",
         code: `
         import { Box } from "@chakra-ui/react";
         <Box
@@ -218,7 +218,7 @@ test("test", () => {
         `,
       },
       {
-        name: "ReservedPriority should be sorted",
+        name: "Default reservedProps should be sorted",
         code: `
           import { Box } from "@chakra-ui/react";
           <Box
@@ -244,7 +244,7 @@ test("test", () => {
         `,
       },
       {
-        name: "ReservedPriority should be sorted",
+        name: "Different type of props should be sorted in order, except componentSpecificProps",
         code: `
           import { Box } from "@chakra-ui/react";
           <Box
@@ -270,7 +270,7 @@ test("test", () => {
         `,
       },
       {
-        name: "if keys are not reservedFirstProps, they should be sorted in alphabetical order",
+        name: "if keys are `Other Props`, they should be sorted in alphabetical order",
         code: `
           import { Box } from "@chakra-ui/react";
           <Box
