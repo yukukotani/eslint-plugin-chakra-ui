@@ -403,7 +403,7 @@ const calcPriorityFromIndex = (index: Index, config: Config) => {
   // They will be treated as "other Props".
 
   // Currently, the priority is determined from the index of the array.
-  // We assume that the length of each array is atmost 100.
+  // We assume that the length of each array is at most 100.
   // When changing the specification, be sure to check that the stylePropsPriority range does not overlap with others.
   // Now it's range is [200, 10200]. 10200 is 100 * 100 + 200.
 
