@@ -2,7 +2,7 @@
 
 Example of **incorrect** code for this rule:
 
-```
+```tsx
 import { Box } from "@chakra-ui/react";
 
 <Box margin="2" backgroundColor="red">
@@ -12,7 +12,7 @@ import { Box } from "@chakra-ui/react";
 
 Example of **correct** code for this rule:
 
-```
+```tsx
 import { Box } from "@chakra-ui/react";
 
 <Box m="2" bgColor="red">
@@ -26,7 +26,7 @@ This rule enforces the usage of shorthand property names.
 
 ## Options
 
-```
+```ts
 "chakra-ui/props-shorthand": [<enabled>, {
   "noShorthand": <boolean>
 }]
