@@ -1,12 +1,6 @@
 import { ParserServices } from "@typescript-eslint/utils";
 import { JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
-import {
-  Declaration,
-  ImportDeclaration,
-  Symbol,
-  SyntaxKind,
-  Expression,
-} from "typescript";
+import { Declaration, ImportDeclaration, Symbol, SyntaxKind, Expression } from "typescript";
 
 export function isChakraElement(node: JSXOpeningElement, parserServices: ParserServices): boolean {
   const typeChecker = parserServices.program.getTypeChecker();
@@ -41,9 +35,6 @@ function getModuleSpecifierOfImportSpecifier(symbol: Symbol): string | null {
 function findModuleSpecifier(declaration: Declaration): Expression | null {
   if (declaration.kind === SyntaxKind.ImportSpecifier) {
     return (declaration.parent.parent.parent as ImportDeclaration).moduleSpecifier;
-  } else if (declaration.kind === SyntaxKind.NamedImports) {
-    // @ts-expect-error TS 4.4 Support. declaration.parent.parent.parent is ImportEqualsDeclaration
-    return declaration.parent.parent.parent.moduleSpecifier;
   }
 
   return null;
