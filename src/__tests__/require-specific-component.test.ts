@@ -30,10 +30,38 @@ test("test", () => {
         name: "Require shorthand",
         code: `
           import { Box } from "@chakra-ui/react";
-            
+
           <Box display="flex" margin="2" paddingTop={4}>Hello</Box>
-      `,
+        `,
         errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex margin="2" paddingTop={4}>Hello</Box>
+        `,
+      },
+      {
+        name: "Require shorthand",
+        code: `
+          import { 
+            Box,
+            Text,
+            List,
+          } from "@chakra-ui/react";
+
+          <Box display="flex" margin="2" paddingTop={4}>Hello</Box>
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+        import { 
+          Box,
+          Text,
+          List,
+          Flex,
+        } from "@chakra-ui/react";
+
+          <Box margin="2" paddingTop={4}>Hello</Box>
+        `,
       },
     ],
   });

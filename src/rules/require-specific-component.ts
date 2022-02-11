@@ -1,6 +1,9 @@
 import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getNonShorthand } from "../lib/getShorthand";
+import { ParserServices } from "@typescript-eslint/utils";
+import { ImportDeclaration, JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
+import { Symbol } from "typescript";
 
 export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificComponent", []> = {
   meta: {
@@ -61,6 +64,15 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
                 invalidComponent: componentName,
                 validComponent: validComponent,
               },
+              fix(fixer) {
+                const importDecl = getImportDeclarationOfJSX(node, parserServices);
+                if (!importDecl) {
+                  throw new Error("No decl");
+                }
+
+                const last = importDecl.specifiers[importDecl.specifiers.length - 1];
+                return fixer.insertTextAfter(last, `, ${validComponent}`);
+              },
             });
           }
         }
@@ -78,3 +90,28 @@ const attributeMap: Record<string, Record<string, string>> = {
     img: "Image",
   },
 };
+
+function getImportDeclarationOfJSX(node: JSXOpeningElement, parserServices: ParserServices): ImportDeclaration | null {
+  const typeChecker = parserServices.program.getTypeChecker();
+  const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node.name);
+  const symbol = typeChecker.getSymbolAtLocation(tsNode);
+  // string tag
+  if (symbol == null) {
+    return null;
+  }
+
+  return getImportDeclarationOfSymbol(symbol, parserServices);
+}
+
+function getImportDeclarationOfSymbol(
+  // eslint-disable-next-line @typescript-eslint/ban-types -- This Symbol is imported from "typescript"
+  symbol: Symbol,
+  parserServices: ParserServices
+): ImportDeclaration | null {
+  if (symbol.declarations == null || symbol.declarations.length < 1) {
+    return null;
+  }
+
+  const node = parserServices.tsNodeToESTreeNodeMap.get(symbol.declarations[0]).parent;
+  return node?.type === AST_NODE_TYPES.ImportDeclaration ? node : null;
+}
