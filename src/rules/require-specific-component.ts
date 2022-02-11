@@ -74,4 +74,7 @@ const attributeMap: Record<string, Record<string, string>> = {
     flex: "Flex",
     grid: "Grid",
   },
+  as: {
+    img: "Image",
+  },
 };
