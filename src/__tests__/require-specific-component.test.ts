@@ -17,11 +17,19 @@ test("test", () => {
   tester.run("require-specific-component", requireSpecificComponentRule, {
     valid: [
       {
-        name: "Shorthand",
+        name: "Using Flex component",
         code: `
-          import { Box } from "@chakra-ui/react";
-          
-          <Box m="2" pt={4}>Hello</Box>
+        import { Flex } from "@chakra-ui/react";
+
+        <Flex margin="2" paddingTop={4}>Hello</Flex>
+        `,
+      },
+      {
+        name: "No specific component",
+        code: `
+        import { Box } from "@chakra-ui/react";
+
+        <Box display="inline" margin="2" paddingTop={4}>Hello</Box>
         `,
       },
     ],
