@@ -128,7 +128,13 @@ function createFixToInsertImport(
   }
 
   const last = importDecl.specifiers[importDecl.specifiers.length - 1];
-  return fixer.insertTextAfter(last, `, ${validComponent}`);
+  if (importDecl.loc.start.line !== last.loc.start.line) {
+    // in case of multi line
+    const indent = " ".repeat(last.loc.start.column);
+    return fixer.insertTextAfter(last, `,\n${indent}${validComponent}`);
+  } else {
+    return fixer.insertTextAfter(last, `, ${validComponent}`);
+  }
 }
 
 function getImportDeclarationOfJSX(node: JSXOpeningElement, parserServices: ParserServices): ImportDeclaration | null {
