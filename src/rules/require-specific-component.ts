@@ -127,6 +127,14 @@ function createFixToInsertImport(
     throw new Error("No decl");
   }
 
+  const sameNameSpecifier = importDecl.specifiers.find(
+    (sp) => sp.type === AST_NODE_TYPES.ImportSpecifier && sp.local.name === validComponent
+  );
+  if (sameNameSpecifier) {
+    // in case of already imported
+    return null;
+  }
+
   const last = importDecl.specifiers[importDecl.specifiers.length - 1];
   if (importDecl.loc.start.line !== last.loc.start.line) {
     // in case of multi line

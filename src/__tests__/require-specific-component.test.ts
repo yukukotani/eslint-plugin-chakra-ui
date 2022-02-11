@@ -41,6 +41,20 @@ test("test", () => {
         `,
       },
       {
+        name: "Require Image component",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box as="img" src="https://example.com/bg.jpg" paddingTop={4} />
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Image } from "@chakra-ui/react";
+
+          <Image src="https://example.com/bg.jpg" paddingTop={4} />
+        `,
+      },
+      {
         name: "Require Flex component with last attribute",
         code: `
           import { Box } from "@chakra-ui/react";
@@ -123,6 +137,20 @@ test("test", () => {
             List,
             Flex,
           } from "@chakra-ui/react";
+
+          <Flex margin="2" paddingTop={4}>Hello</Flex>
+        `,
+      },
+      {
+        name: "Require Flex component with already imported",
+        code: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Box display="flex" margin="2" paddingTop={4}>Hello</Box>
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
 
           <Flex margin="2" paddingTop={4}>Hello</Flex>
         `,
