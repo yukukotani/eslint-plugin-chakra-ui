@@ -65,13 +65,7 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
                 validComponent: validComponent,
               },
               fix(fixer) {
-                const importDecl = getImportDeclarationOfJSX(node, parserServices);
-                if (!importDecl) {
-                  throw new Error("No decl");
-                }
-
-                const last = importDecl.specifiers[importDecl.specifiers.length - 1];
-                return fixer.insertTextAfter(last, `, ${validComponent}`);
+                return createFixToInsertImport(node, validComponent, parserServices, fixer);
               },
             });
           }
@@ -90,6 +84,21 @@ const attributeMap: Record<string, Record<string, string>> = {
     img: "Image",
   },
 };
+
+function createFixToInsertImport(
+  jsxNode: JSXOpeningElement,
+  validComponent: string,
+  parserServices: ParserServices,
+  fixer: TSESLint.RuleFixer
+) {
+  const importDecl = getImportDeclarationOfJSX(jsxNode, parserServices);
+  if (!importDecl) {
+    throw new Error("No decl");
+  }
+
+  const last = importDecl.specifiers[importDecl.specifiers.length - 1];
+  return fixer.insertTextAfter(last, `, ${validComponent}`);
+}
 
 function getImportDeclarationOfJSX(node: JSXOpeningElement, parserServices: ParserServices): ImportDeclaration | null {
   const typeChecker = parserServices.program.getTypeChecker();
