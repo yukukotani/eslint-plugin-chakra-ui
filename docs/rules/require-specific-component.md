@@ -22,7 +22,7 @@ import { Box, Flex } from "@chakra-ui/react";
 
 ## Details
 
-This rule enforces usage of specific Chakra components instead of Box components with an attribute.
+This rule enforces the usage of specific Chakra components instead of Box components with an attribute.
 
 ## Options
 
