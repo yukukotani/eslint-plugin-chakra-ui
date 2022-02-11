@@ -27,7 +27,7 @@ test("test", () => {
     ],
     invalid: [
       {
-        name: "Require shorthand",
+        name: "Require Flex component",
         code: `
           import { Box } from "@chakra-ui/react";
 
@@ -37,11 +37,75 @@ test("test", () => {
         output: `
           import { Box, Flex } from "@chakra-ui/react";
 
-          <Flex margin="2" paddingTop={4}>Hello</Box>
+          <Flex margin="2" paddingTop={4}>Hello</Flex>
         `,
       },
       {
-        name: "Require shorthand",
+        name: "Require Flex component with last attribute",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box margin="2" paddingTop={4} display="flex">Hello</Box>
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex margin="2" paddingTop={4}>Hello</Flex>
+        `,
+      },
+      {
+        name: "Require Flex component with multi-line attributes",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box
+            display="flex"
+            margin="2"
+            paddingTop={4}
+          >
+            Hello
+          </Box>
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex
+            margin="2"
+            paddingTop={4}
+          >
+            Hello
+          </Flex>
+        `,
+      },
+      {
+        name: "Require Flex component with last attribute in multi-line attributes",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box
+            margin="2"
+            paddingTop={4}
+            display="flex"
+          >
+            Hello
+          </Box>
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex
+            margin="2"
+            paddingTop={4}
+          >
+            Hello
+          </Flex>
+        `,
+      },
+      {
+        name: "Require Flex component with multi-line import",
         code: `
           import { 
             Box,
@@ -53,14 +117,14 @@ test("test", () => {
         `,
         errors: [{ messageId: "requireSpecificComponent" }],
         output: `
-        import { 
-          Box,
-          Text,
-          List,
-          Flex,
-        } from "@chakra-ui/react";
+          import { 
+            Box,
+            Text,
+            List,
+            Flex,
+          } from "@chakra-ui/react";
 
-          <Box margin="2" paddingTop={4}>Hello</Box>
+          <Flex margin="2" paddingTop={4}>Hello</Flex>
         `,
       },
     ],

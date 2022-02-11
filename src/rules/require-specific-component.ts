@@ -2,8 +2,14 @@ import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getNonShorthand } from "../lib/getShorthand";
 import { ParserServices } from "@typescript-eslint/utils";
-import { ImportDeclaration, JSXOpeningElement } from "@typescript-eslint/types/dist/ast-spec";
+import { ImportDeclaration } from "@typescript-eslint/types/dist/ast-spec";
 import { Symbol } from "typescript";
+import {
+  JSXAttribute,
+  JSXElement,
+  JSXOpeningElement,
+} from "@typescript-eslint/utils/node_modules/@typescript-eslint/types/dist/ast-spec";
+import { RuleFix } from "@typescript-eslint/utils/dist/ts-eslint";
 
 export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificComponent", []> = {
   meta: {
@@ -49,7 +55,7 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
           const rawAttributeName = sourceCode.getText(attribute.name);
           const attributeName = getNonShorthand(componentName, rawAttributeName) || rawAttributeName;
           if (!attributeMap[attributeName]) {
-            return;
+            continue;
           }
 
           const rawAttributeValue = sourceCode.getText(attribute.value);
@@ -65,7 +71,14 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
                 validComponent: validComponent,
               },
               fix(fixer) {
-                return createFixToInsertImport(node, validComponent, parserServices, fixer);
+                const renameStartTag = fixer.replaceText(node.name, validComponent);
+
+                return [
+                  renameStartTag,
+                  createFixToRenameEndTag(node, validComponent, fixer),
+                  createFixToRemoveAttribute(attribute, node, fixer),
+                  createFixToInsertImport(node, validComponent, parserServices, fixer),
+                ].filter((v) => !!v) as RuleFix[];
               },
             });
           }
@@ -84,6 +97,24 @@ const attributeMap: Record<string, Record<string, string>> = {
     img: "Image",
   },
 };
+
+function createFixToRenameEndTag(jsxNode: JSXOpeningElement, validComponent: string, fixer: TSESLint.RuleFixer) {
+  const endNode = (jsxNode.parent as JSXElement)?.closingElement;
+  return endNode ? fixer.replaceText(endNode.name, validComponent) : null;
+}
+
+function createFixToRemoveAttribute(attribute: JSXAttribute, jsxNode: JSXOpeningElement, fixer: TSESLint.RuleFixer) {
+  const attributeIndex = jsxNode.attributes.findIndex((a) => a === attribute);
+
+  if (attributeIndex === jsxNode.attributes.length - 1) {
+    // in case of last attribute
+    const prevAttribute = jsxNode.attributes[attributeIndex - 1];
+    return fixer.removeRange([prevAttribute.range[1], attribute.range[1]]);
+  } else {
+    const nextAttribute = jsxNode.attributes[attributeIndex + 1];
+    return fixer.removeRange([attribute.range[0], nextAttribute.range[0]]);
+  }
+}
 
 function createFixToInsertImport(
   jsxNode: JSXOpeningElement,
