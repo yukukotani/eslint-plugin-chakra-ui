@@ -22,7 +22,7 @@ import { Box } from "@chakra-ui/react";
 
 ## Details
 
-This rule enforces the usage of shorthand property names.
+This rule enforces the usage of shorthand property or vice-versa.
 
 ## Options
 
@@ -34,4 +34,4 @@ This rule enforces the usage of shorthand property names.
 
 ### noShorthand
 
-By default, this rule enforces using shorthand. If `noShorthand` is true, non-shorthand is preferred.
+By default, this rule enforces using shorthand. If `noShorthand` is true, non-shorthand is enforced.
