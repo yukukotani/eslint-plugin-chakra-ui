@@ -9,7 +9,7 @@ ESLint rules for [Chakra UI](https://chakra-ui.com/).
 
 This plugin depends on TypeScript to check whether the component is a Chakra component or not. You need to install `@typescript-eslint/parser` but you can still write vanilla JavaScript.
 
-TypeScript 4.4 or higher is supported.
+TypeScript 4.4 or higher is supported. We don't test 4.3 or below but it probably works.
 
 ## Installation
 
@@ -40,7 +40,8 @@ Now you can add chakra-ui rules:
 {
   "rules": {
     "chakra-ui/props-order": "error",
-    "chakra-ui/props-shorthand": "error"
+    "chakra-ui/props-shorthand": "error",
+    "chakra-ui/require-specific-component": "error"
   }
 }
 ```
@@ -49,8 +50,9 @@ Now you can add chakra-ui rules:
 
 Every rule is fixable with `eslint --fix`.
 
-- [`props-order`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-order.md): Enforce semantic order of properties.
-- [`props-shorthand`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md): Enforce using shorthand property or not.
+- [`props-order`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-order.md): Enforces order of properties to be semantical
+- [`props-shorthand`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md): Enforces the usage of shorthand property or vice-versa
+- [`require-specific-component`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/require-specific-component.md): Enforces the usage of specific Chakra components instead of Box components with an attribute.
 
 ## Prior Art
 

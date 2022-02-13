@@ -22,8 +22,25 @@ import { Box } from "@chakra-ui/react";
 
 ## Details
 
-This rule groups properties semantically, then reorder the groups. The order in the group is not enforced.
+This rule enforces order of properties to be semantical.
 
 ## Options
 
-N/A
+```ts
+"chakra-ui/props-order": [<enabled>, {
+  "firstProps": <string[]>,
+  "lastProps": <string[]>
+}]
+```
+
+### firstProps
+
+Given props will come first regardless of semantics.
+
+Default value: `["className", "key", "ref", "dangerouslySetInnerHtml"]`
+
+### lastProps
+
+Given props will come last regardless of semantics.
+
+Default value: `[]`
