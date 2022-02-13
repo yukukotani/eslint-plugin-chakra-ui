@@ -57,7 +57,7 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
             continue;
           }
 
-          report({
+          return report({
             node: node,
             messageId: "requireSpecificComponent",
             data: {
