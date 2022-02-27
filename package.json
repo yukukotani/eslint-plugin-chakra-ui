@@ -21,7 +21,8 @@
     "lint:tsc": "tsc --noEmit",
     "build": "rm -rf ./dist && swc ./src -d dist",
     "test": "uvu -r @swc-node/register src/__tests__",
-    "test:watch": "watchlist src -- npm run test"
+    "test:watch": "watchlist src -- npm run test",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@typescript-eslint/utils": "^5.10.1"
