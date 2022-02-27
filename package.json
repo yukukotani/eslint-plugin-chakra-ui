@@ -22,7 +22,7 @@
     "build": "rm -rf ./dist && swc ./src -d dist",
     "test": "uvu -r @swc-node/register src/__tests__",
     "test:watch": "watchlist src -- npm run test",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@typescript-eslint/utils": "^5.10.1"
