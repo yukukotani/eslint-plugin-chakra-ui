@@ -37,6 +37,8 @@ const shorthandMap: ShorthandMap = {
     backgroundAttachment: "bgAttachment",
     backgroundColor: "bgColor",
     backgroundClip: "bgClip",
+    // Position
+    position: "pos",
   },
   Flex: {
     alignItems: "align",
