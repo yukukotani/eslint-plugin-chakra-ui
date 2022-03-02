@@ -39,6 +39,8 @@ const shorthandMap: ShorthandMap = {
     backgroundClip: "bgClip",
     // Position
     position: "pos",
+    // Shadow
+    boxShadow: "shadow",
   },
   Flex: {
     alignItems: "align",
