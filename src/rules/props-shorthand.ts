@@ -1,7 +1,6 @@
-import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/utils";
+import { AST_NODE_TYPES, TSESLint, TSESTree } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getNonShorthand, getShorthand } from "../lib/getShorthand";
-import { JSXAttribute } from "@typescript-eslint/types/dist/ast-spec";
 
 type Options = {
   noShorthand: boolean;
@@ -80,7 +79,11 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
     },
   };
 
-function getAttributeText(attribute: JSXAttribute, key: string, sourceCode: Readonly<TSESLint.SourceCode>): string {
+function getAttributeText(
+  attribute: TSESTree.JSXAttribute,
+  key: string,
+  sourceCode: Readonly<TSESLint.SourceCode>
+): string {
   if (attribute.value) {
     const valueText = sourceCode.getText(attribute.value);
     return `${key}=${valueText}`;
