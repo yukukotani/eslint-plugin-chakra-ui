@@ -1,13 +1,10 @@
-import { AST_NODE_TYPES } from "@typescript-eslint/utils";
-import { ParserServices } from "@typescript-eslint/utils";
-import { ImportDeclaration } from "@typescript-eslint/types/dist/ast-spec";
+import { AST_NODE_TYPES, TSESTree, ParserServices } from "@typescript-eslint/utils";
 import { Symbol } from "typescript";
-import { JSXOpeningElement } from "@typescript-eslint/utils/node_modules/@typescript-eslint/types/dist/ast-spec";
 
 export function getImportDeclarationOfJSX(
-  node: JSXOpeningElement,
+  node: TSESTree.JSXOpeningElement,
   parserServices: ParserServices
-): ImportDeclaration | null {
+): TSESTree.ImportDeclaration | null {
   const typeChecker = parserServices.program.getTypeChecker();
   const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node.name);
   const symbol = typeChecker.getSymbolAtLocation(tsNode);
@@ -23,7 +20,7 @@ function getImportDeclarationOfSymbol(
   // eslint-disable-next-line @typescript-eslint/ban-types -- This Symbol is imported from "typescript"
   symbol: Symbol,
   parserServices: ParserServices
-): ImportDeclaration | null {
+): TSESTree.ImportDeclaration | null {
   if (symbol.declarations == null || symbol.declarations.length < 1) {
     return null;
   }

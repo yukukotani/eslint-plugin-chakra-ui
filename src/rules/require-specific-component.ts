@@ -1,12 +1,5 @@
-import { AST_NODE_TYPES, TSESLint } from "@typescript-eslint/utils";
+import { AST_NODE_TYPES, TSESLint, TSESTree, ParserServices } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
-import { ParserServices } from "@typescript-eslint/utils";
-import {
-  JSXAttribute,
-  JSXElement,
-  JSXOpeningElement,
-} from "@typescript-eslint/utils/node_modules/@typescript-eslint/types/dist/ast-spec";
-import { RuleFix } from "@typescript-eslint/utils/dist/ts-eslint";
 import { getImportDeclarationOfJSX } from "../lib/getImportDeclaration";
 import { findSpecificComponent } from "../lib/findSpecificComponent";
 
@@ -73,7 +66,7 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
                 createFixToRenameEndTag(node, specificComponent, fixer),
                 createFixToRemoveAttribute(attribute, node, fixer),
                 createFixToInsertImport(node, specificComponent, parserServices, fixer),
-              ].filter((v) => !!v) as RuleFix[];
+              ].filter((v) => !!v) as TSESLint.RuleFix[];
             },
           });
         }
@@ -82,12 +75,20 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
   },
 };
 
-function createFixToRenameEndTag(jsxNode: JSXOpeningElement, validComponent: string, fixer: TSESLint.RuleFixer) {
-  const endNode = (jsxNode.parent as JSXElement)?.closingElement;
+function createFixToRenameEndTag(
+  jsxNode: TSESTree.JSXOpeningElement,
+  validComponent: string,
+  fixer: TSESLint.RuleFixer
+) {
+  const endNode = (jsxNode.parent as TSESTree.JSXElement)?.closingElement;
   return endNode ? fixer.replaceText(endNode.name, validComponent) : null;
 }
 
-function createFixToRemoveAttribute(attribute: JSXAttribute, jsxNode: JSXOpeningElement, fixer: TSESLint.RuleFixer) {
+function createFixToRemoveAttribute(
+  attribute: TSESTree.JSXAttribute,
+  jsxNode: TSESTree.JSXOpeningElement,
+  fixer: TSESLint.RuleFixer
+) {
   const attributeIndex = jsxNode.attributes.findIndex((a) => a === attribute);
 
   if (attributeIndex === jsxNode.attributes.length - 1) {
@@ -101,7 +102,7 @@ function createFixToRemoveAttribute(attribute: JSXAttribute, jsxNode: JSXOpening
 }
 
 function createFixToInsertImport(
-  jsxNode: JSXOpeningElement,
+  jsxNode: TSESTree.JSXOpeningElement,
   validComponent: string,
   parserServices: ParserServices,
   fixer: TSESLint.RuleFixer
