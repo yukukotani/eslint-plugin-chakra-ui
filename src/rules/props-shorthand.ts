@@ -13,7 +13,7 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
       docs: {
         description: "Enforces the usage of shorthand Chakra component props.",
         recommended: "error",
-        url: "https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md",
+        url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md",
       },
       messages: {
         enforcesShorthand: "Prop '{{invalidName}}' could be replaced by the '{{validName}}' shorthand.",

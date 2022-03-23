@@ -1,7 +1,7 @@
 # eslint-plugin-chakra-ui
 
 [![npm](https://img.shields.io/npm/v/eslint-plugin-chakra-ui)](https://www.npmjs.com/package/eslint-plugin-chakra-ui)
-[![license](https://img.shields.io/npm/l/eslint-plugin-chakra-ui)](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/LICENSE)
+[![license](https://img.shields.io/npm/l/eslint-plugin-chakra-ui)](https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/master/LICENSE)
 
 ESLint rules for [Chakra UI](https://chakra-ui.com/).
 
@@ -50,9 +50,9 @@ Now you can add chakra-ui rules:
 
 Every rule is fixable with `eslint --fix`.
 
-- [`props-order`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-order.md): Enforces order of properties to be semantical
-- [`props-shorthand`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md): Enforces the usage of shorthand property or vice-versa
-- [`require-specific-component`](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/require-specific-component.md): Enforces the usage of specific Chakra components instead of Box components with an attribute.
+- [`props-order`](https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/master/docs/rules/props-order.md): Enforces order of properties to be semantical
+- [`props-shorthand`](https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md): Enforces the usage of shorthand property or vice-versa
+- [`require-specific-component`](https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/master/docs/rules/require-specific-component.md): Enforces the usage of specific Chakra components instead of Box components with an attribute.
 
 ## Prior Art
 
