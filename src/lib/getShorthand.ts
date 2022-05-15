@@ -25,7 +25,6 @@ const shorthandMap: ShorthandMap = {
     maxWidth: "maxW",
     minHeight: "minH",
     maxHeight: "maxH",
-    display: "d",
     // Flex
     flexDirection: "flexDir",
     // Background
