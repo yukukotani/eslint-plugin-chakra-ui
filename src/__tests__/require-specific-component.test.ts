@@ -163,20 +163,6 @@ test("test", () => {
           <Flex margin="2" paddingTop={4}>Hello</Flex>
         `,
       },
-      {
-        name: "Require Flex component with shorthand props",
-        code: `
-          import { Box } from "@chakra-ui/react";
-
-          <Box d="flex" margin="2" paddingTop={4}>Hello</Box>
-        `,
-        errors: [{ messageId: "requireSpecificComponent" }],
-        output: `
-          import { Box, Flex } from "@chakra-ui/react";
-
-          <Flex margin="2" paddingTop={4}>Hello</Flex>
-        `,
-      },
     ],
   });
 });
