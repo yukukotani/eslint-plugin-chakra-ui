@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-chakra-ui",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "ESLint Plugin for Chakra UI",
   "keywords": [
     "eslint",
