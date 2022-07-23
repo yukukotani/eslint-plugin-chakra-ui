@@ -29,7 +29,8 @@ This rule enforces order of properties to be semantical.
 ```ts
 "chakra-ui/props-order": [<enabled>, {
   "firstProps": <string[]>,
-  "lastProps": <string[]>
+  "lastProps": <string[]>,
+  "applyToAllComponents": <boolean>
 }]
 ```
 
@@ -44,3 +45,7 @@ Default value: `["className", "key", "ref", "dangerouslySetInnerHtml"]`
 Given props will come last regardless of semantics.
 
 Default value: `[]`
+
+### applyToAllComponents
+
+By default, this rule only applies to components imported from `@chakra-ui/react`. If `applyToAllComponents` is true, it runs on all components. This is helpful if you re-export chakra component, or you extend a lot of chakra components and have the same props.

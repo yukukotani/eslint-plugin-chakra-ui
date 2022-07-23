@@ -7,6 +7,7 @@ type Options = [
     firstProps?: string[];
     lastProps?: string[];
     displayCompPropsBeforeStyleProps?: boolean;
+    applyToAllComponents?: boolean;
   }
 ];
 
@@ -49,6 +50,10 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
             type: "boolean",
             default: false,
           },
+          applyToAllComponents: {
+            type: "boolean",
+            default: false
+          },
         },
       },
     ],
@@ -63,7 +68,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
 
     return {
       JSXOpeningElement(node) {
-        if (!isChakraElement(node, parserServices)) {
+        if (!option?.applyToAllComponents && !isChakraElement(node, parserServices)) {
           return;
         }
 
