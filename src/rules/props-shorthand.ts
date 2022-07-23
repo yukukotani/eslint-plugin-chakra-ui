@@ -43,11 +43,14 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
         return {};
       }
 
-      const { noShorthand = false } = options[0] || {};
+      const { 
+        noShorthand = false, 
+        applyToAllComponents = false 
+      } = options[0] || {};
 
       return {
         JSXOpeningElement(node) {
-          if (!option?.applyToAllComponents && !isChakraElement(node, parserServices)) {
+          if (!applyToAllComponents && !isChakraElement(node, parserServices)) {
             return;
           }
 
