@@ -28,10 +28,15 @@ This rule enforces the usage of shorthand property or vice-versa.
 
 ```ts
 "chakra-ui/props-shorthand": [<enabled>, {
-  "noShorthand": <boolean>
+  "noShorthand": <boolean>,
+  "applyToAllComponents": <boolean>
 }]
 ```
 
 ### noShorthand
 
 By default, this rule enforces using shorthand. If `noShorthand` is true, non-shorthand is enforced.
+
+### applyToAllComponents
+
+By default, this rule only applies to components imported from `@chakra-ui/react`. If `applyToAllComponents` is true, it runs on all components. This is helpful if you re-export chakra component, or you extend a lot of chakra components and have the same props.

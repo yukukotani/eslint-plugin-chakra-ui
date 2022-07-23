@@ -4,6 +4,7 @@ import { getNonShorthand, getShorthand } from "../lib/getShorthand";
 
 type Options = {
   noShorthand: boolean;
+  applyToAllComponents?: boolean;
 };
 
 export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enforcesNoShorthand", [Partial<Options>]> =
@@ -27,6 +28,10 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
               type: "boolean",
               default: false,
             },
+            applyToAllComponents: {
+              type: "boolean",
+              default: false
+            },
           },
         },
       ],
@@ -42,7 +47,7 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
 
       return {
         JSXOpeningElement(node) {
-          if (!isChakraElement(node, parserServices)) {
+          if (!option?.applyToAllComponents && !isChakraElement(node, parserServices)) {
             return;
           }
 
