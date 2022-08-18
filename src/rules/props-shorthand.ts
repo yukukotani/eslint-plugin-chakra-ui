@@ -30,7 +30,7 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
             },
             applyToAllComponents: {
               type: "boolean",
-              default: false
+              default: false,
             },
           },
         },
@@ -43,10 +43,7 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
         return {};
       }
 
-      const { 
-        noShorthand = false, 
-        applyToAllComponents = false 
-      } = options[0] || {};
+      const { noShorthand = false, applyToAllComponents = false } = options[0] || {};
 
       return {
         JSXOpeningElement(node) {

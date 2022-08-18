@@ -19,6 +19,8 @@
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .ts,.tsx ./src",
     "lint:tsc": "tsc --noEmit",
+    "lint:prettier": "prettier --check ./src",
+    "fix:prettier": "prettier --write ./src",
     "build": "rm -rf ./dist && swc ./src -d dist",
     "test": "uvu -r @swc-node/register src/__tests__",
     "test:watch": "watchlist src -- pnpm run test",
@@ -39,6 +41,7 @@
     "eslint-plugin-eslint-plugin": "^5.0.5",
     "eslint-plugin-unused-imports": "^2.0.0",
     "npm-run-all": "^4.1.5",
+    "prettier": "^2.7.1",
     "typescript": "^4.7.4",
     "uvu": "^0.5.6",
     "watchlist": "^0.3.1"
