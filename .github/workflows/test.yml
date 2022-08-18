@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Test
+    name: Test with TypeScript ${{ matrix.ts-version }}
     strategy:
       matrix:
         ts-version:
@@ -29,8 +29,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Install TypeScript ${{ matrix.os }}
-        run: npm install typescript@${{ matrix.os }}
+      - name: Install TypeScript ${{ matrix.ts-version }}
+        run: npm install typescript@${{ matrix.ts-version }}
 
       - name: Run tests
         run: npm run test
