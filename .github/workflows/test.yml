@@ -9,6 +9,13 @@ on:
 jobs:
   test:
     name: Test
+    strategy:
+      matrix:
+        ts-version:
+          - "4.7"
+          - "4.6"
+          - "4.5"
+          - "4.4"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,6 +28,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+
+      - name: Install TypeScript ${{ matrix.os }}
+        run: npm install typescript@${{ matrix.os }}
 
       - name: Run tests
         run: npm run test
