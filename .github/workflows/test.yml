@@ -14,13 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2.5.1
-        with:
-          cache: "npm"
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
 
-      - name: Install Dependencies
-        run: npm ci
+      - name: Install TypeScript ${{ matrix.ts-version }}
+        run: pnpm add typescript@${{ matrix.ts-version }}
 
       - name: Run tests
-        run: npm run test
+        run: pnpm run test
