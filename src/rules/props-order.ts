@@ -52,7 +52,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
           },
           applyToAllComponents: {
             type: "boolean",
-            default: false
+            default: false,
           },
         },
       },
