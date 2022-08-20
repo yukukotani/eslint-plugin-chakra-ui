@@ -54,6 +54,10 @@ Every rule is fixable with `eslint --fix`.
 - [`props-shorthand`](https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/props-shorthand.md): Enforces the usage of shorthand property or vice-versa
 - [`require-specific-component`](https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/require-specific-component.md): Enforces the usage of specific Chakra components instead of Box components with an attribute.
 
+## Contributing
+
+See [contributing guide](CONTRIBUTING.md).
+
 ## Prior Art
 
 This plugin is inspired by [eslint-plugin-tailwind-css](https://github.com/francoismassart/eslint-plugin-tailwindcss).
