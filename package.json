@@ -48,7 +48,7 @@
   },
   "engines": {
     "node": "12.x || 14.x || >= 16",
-    "pnpm": ">=4"
+    "pnpm": ">=4.14.4"
   },
   "peerDependencies": {
     "eslint": ">=6"
