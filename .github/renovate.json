@@ -11,6 +11,11 @@
   },
   "packageRules": [
     {
+      "groupName": "peerDependencies",
+      "matchPackageNames": ["eslint"],
+      "matchDepTypes": ["peerDependencies"]
+    },
+    {
       "groupName": "@typescript-eslint/*",
       "matchPackagePatterns": ["^@typescript-eslint/"]
     },
