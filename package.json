@@ -51,7 +51,7 @@
     "pnpm": ">=7.9.3"
   },
   "peerDependencies": {
-    "eslint": ">=6"
+    "eslint": ">=6.8.0"
   },
   "license": "MIT",
   "files": [
