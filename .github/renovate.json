@@ -13,7 +13,8 @@
     {
       "groupName": "peerDependencies",
       "matchPackageNames": ["eslint"],
-      "matchDepTypes": ["peerDependencies"]
+      "matchDepTypes": ["peerDependencies"],
+      "enabled": false
     },
     {
       "groupName": "@typescript-eslint/*",
