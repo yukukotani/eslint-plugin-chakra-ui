@@ -60,6 +60,8 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
     fixable: "code",
   },
 
+  defaultOptions: [{}],
+
   create: ({ parserServices, report, getSourceCode, options }) => {
     if (!parserServices) {
       return {};
