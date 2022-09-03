@@ -19,6 +19,8 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
     fixable: "code",
   },
 
+  defaultOptions: [],
+
   create: ({ parserServices, report, getSourceCode }) => {
     if (!parserServices) {
       return {};

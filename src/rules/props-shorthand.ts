@@ -38,6 +38,8 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
       fixable: "code",
     },
 
+    defaultOptions: [{}],
+
     create: ({ parserServices, report, getSourceCode, options }) => {
       if (!parserServices) {
         return {};
