@@ -79,7 +79,7 @@ const priorityGroups: readonly PriorityGroup[] = [
       "pe",
       "paddingEnd",
       "pb",
-      "paddingButton",
+      "paddingBottom",
       "pl",
       "paddingLeft",
       "ps",
