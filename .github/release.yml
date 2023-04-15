@@ -3,6 +3,11 @@ changelog:
     - title: Features
       labels:
         - "*"
+      exclude:
+        labels:
+          - bug
+          - dependencies
+          - internal
     - title: Bug fixes
       labels:
         - bug
