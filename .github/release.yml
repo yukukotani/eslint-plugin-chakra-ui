@@ -9,3 +9,6 @@ changelog:
     - title: Dependencies
       labels:
         - dependency
+    - title: Internal changes
+      labels:
+        - internal
