@@ -6,7 +6,7 @@ changelog:
       exclude:
         labels:
           - bug
-          - dependencies
+          - dependency
           - internal
     - title: Bug fixes
       labels:
