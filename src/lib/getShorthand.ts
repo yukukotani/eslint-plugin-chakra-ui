@@ -10,6 +10,8 @@ const shorthandMap: ShorthandMap = {
     marginBottom: "mb",
     marginLeft: "ml",
     marginStart: "ms",
+    marginX: "mx",
+    marginY: "my",
     // Padding
     padding: "p",
     paddingTop: "pt",
@@ -18,6 +20,8 @@ const shorthandMap: ShorthandMap = {
     paddingBottom: "pb",
     paddingLeft: "pl",
     paddingStart: "ps",
+    paddingX: "px",
+    paddingY: "py",
     //Layout
     width: "w",
     height: "h",
