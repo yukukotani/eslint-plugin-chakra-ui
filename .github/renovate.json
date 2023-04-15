@@ -3,6 +3,7 @@
   "extends": ["config:base", ":timezone(Asia/Tokyo)", ":prHourlyLimitNone"],
   "schedule": ["after 10pm every weekend", "before 5am every weekend"],
   "dependencyDashboard": true,
+  "labels": ["dependency"],
   "npm": {
     "rangeStrategy": "bump",
     "lockFileMaintenance": {
