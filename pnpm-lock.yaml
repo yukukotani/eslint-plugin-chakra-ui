@@ -7,8 +7,8 @@ dependencies:
 
 devDependencies:
   '@swc-node/register':
-    specifier: ^1.5.4
-    version: 1.5.4(@swc/core@1.3.50)(typescript@5.0.4)
+    specifier: ^1.6.4
+    version: 1.6.4(@swc/core@1.3.50)(typescript@5.0.4)
   '@swc/cli':
     specifier: ^0.1.62
     version: 0.1.62(@swc/core@1.3.50)
@@ -141,8 +141,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /@swc-node/core@1.9.1(@swc/core@1.3.50):
-    resolution: {integrity: sha512-Mh4T/PmQOpPtqw1BNvU38uWzsXbd5RJji17YBXnj7JDDE5KlTR9sSo2RKxWKDVtHbdcD1S+CtyZXA93aEWlfGQ==}
+  /@swc-node/core@1.10.3(@swc/core@1.3.50):
+    resolution: {integrity: sha512-8rpv1DXzsQjN/C8ZXuaTSmJ4M/lRr6geUlbOQ861DLC+sKWcEEvxRjK9cXQ28GserHuEcFDA3wlF9rD1YD0x+Q==}
     engines: {node: '>= 10'}
     peerDependencies:
       '@swc/core': '>= 1.3'
@@ -150,29 +150,29 @@ packages:
       '@swc/core': 1.3.50
     dev: true
 
-  /@swc-node/register@1.5.4(@swc/core@1.3.50)(typescript@5.0.4):
-    resolution: {integrity: sha512-cM5/A63bO6qLUFC4gcBnOlQO5yd8ObSdFUIp7sXf11Oq5mPVAnJy2DqjbWMUsqUaHuNk+lOIt76ie4DEseUIyA==}
+  /@swc-node/register@1.6.4(@swc/core@1.3.50)(typescript@5.0.4):
+    resolution: {integrity: sha512-J6UtQvFR/VdETg74JsT6t/wEONWRRgM4/aLmyfC4GS4uAUZNn73NUxnih+7bnfpmp6qQwfrQ137zTiXLtMa5hQ==}
     peerDependencies:
       '@swc/core': '>= 1.3'
       typescript: '>= 4.3'
     dependencies:
-      '@swc-node/core': 1.9.1(@swc/core@1.3.50)
-      '@swc-node/sourcemap-support': 0.2.2
+      '@swc-node/core': 1.10.3(@swc/core@1.3.50)
+      '@swc-node/sourcemap-support': 0.3.0
       '@swc/core': 1.3.50
       colorette: 2.0.19
       debug: 4.3.4
       pirates: 4.0.5
-      tslib: 2.4.1
+      tslib: 2.5.0
       typescript: 5.0.4
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@swc-node/sourcemap-support@0.2.2:
-    resolution: {integrity: sha512-PA4p7nC5LwPdEVcQXFxMTpfvizYPeMoB55nIIx+yC3FiLnyPgC2hcpUitPy5h8RRGdCZ/Mvb2ryEcVYS8nI6YA==}
+  /@swc-node/sourcemap-support@0.3.0:
+    resolution: {integrity: sha512-gqBJSmJMWomZFxlppaKea7NeAqFrDrrS0RMt24No92M3nJWcyI9YKGEQKl+EyJqZ5gh6w1s0cTklMHMzRwA1NA==}
     dependencies:
       source-map-support: 0.5.21
-      tslib: 2.4.1
+      tslib: 2.5.0
     dev: true
 
   /@swc/cli@0.1.62(@swc/core@1.3.50):
@@ -2110,8 +2110,8 @@ packages:
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
-  /tslib@2.4.1:
-    resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
+  /tslib@2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
     dev: true
 
   /tsutils@3.21.0(typescript@5.0.4):
