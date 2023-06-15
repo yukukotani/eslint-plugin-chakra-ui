@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         ts-version:
+          - "5.1"
           - "5.0"
           - "4.9"
           - "4.8"
