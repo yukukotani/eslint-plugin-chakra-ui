@@ -163,6 +163,40 @@ test("test", () => {
           <Flex margin="2" paddingTop={4}>Hello</Flex>
         `,
       },
+      {
+        name: "Require Flex component with only one attribute",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box display="flex">Hello</Box>
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex>Hello</Flex>
+        `,
+      },
+      {
+        name: "Require Flex component with only one attribute in multi-line format",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box
+            display="flex"
+          >
+            Hello
+          </Box>
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex>
+            Hello
+          </Flex>
+        `,
+      },
     ],
   });
 });
