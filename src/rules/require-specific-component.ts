@@ -93,6 +93,14 @@ function createFixToRemoveAttribute(
 ) {
   const attributeIndex = jsxNode.attributes.findIndex((a) => a === attribute);
 
+  if (attributeIndex === 0 && jsxNode.attributes.length === 1) {
+    // in case of only one attribute
+    // remove attribute and extra space
+    const startAttributeRangeWithSpaces = jsxNode.name.range[1];
+    const endAttributeRangeWithSpaces = jsxNode.range[1] - 1;
+    return fixer.removeRange([startAttributeRangeWithSpaces, endAttributeRangeWithSpaces]);
+  }
+
   if (attributeIndex === jsxNode.attributes.length - 1) {
     // in case of last attribute
     const prevAttribute = jsxNode.attributes[attributeIndex - 1];
