@@ -8,7 +8,7 @@ type Options = [
     lastProps?: string[];
     displayCompPropsBeforeStyleProps?: boolean;
     applyToAllComponents?: boolean;
-  }
+  },
 ];
 
 export type Config = {
@@ -97,7 +97,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
               messageId: "invalidOrder",
               fix(fixer) {
                 const fixingList = sorted.map((sortedAttribute, index) =>
-                  createFix(node.attributes[index], sortedAttribute, fixer, sourceCode)
+                  createFix(node.attributes[index], sortedAttribute, fixer, sourceCode),
                 );
                 // Operate from the end so that the unoperated node positions are not changed.
                 // If you start from the start, each time you manipulate a attribute,
@@ -114,7 +114,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
 };
 
 const areAllJSXAttribute = (
-  attributes: (TSESTree.JSXAttribute | TSESTree.JSXSpreadAttribute)[]
+  attributes: (TSESTree.JSXAttribute | TSESTree.JSXSpreadAttribute)[],
 ): attributes is TSESTree.JSXAttribute[] => {
   return attributes.every((attribute) => attribute.type === AST_NODE_TYPES.JSXAttribute);
 };
@@ -179,7 +179,7 @@ const createFix = (
   unsotedAttribute: TSESTree.JSXAttribute | TSESTree.JSXSpreadAttribute,
   sortedAttribute: TSESTree.JSXAttribute | TSESTree.JSXSpreadAttribute,
   fixer: TSESLint.RuleFixer,
-  sourceCode: Readonly<TSESLint.SourceCode>
+  sourceCode: Readonly<TSESLint.SourceCode>,
 ) => {
   const nodeText = sourceCode.getText(sortedAttribute);
   return fixer.replaceText(unsotedAttribute, nodeText);

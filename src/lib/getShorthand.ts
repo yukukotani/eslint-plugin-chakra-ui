@@ -88,8 +88,11 @@ export function getNonShorthand(componentName: string, propName: string): string
 }
 
 function flipKeyAndValue(record: Record<string, string>): Record<string, string> {
-  return Object.keys(record).reduce((ret, key) => {
-    ret[record[key]] = key;
-    return ret;
-  }, {} as Record<string, string>);
+  return Object.keys(record).reduce(
+    (ret, key) => {
+      ret[record[key]] = key;
+      return ret;
+    },
+    {} as Record<string, string>,
+  );
 }
