@@ -3,7 +3,7 @@ import { Symbol } from "typescript";
 
 export function getImportDeclarationOfJSX(
   node: TSESTree.JSXOpeningElement,
-  parserServices: ParserServices
+  parserServices: ParserServices,
 ): TSESTree.ImportDeclaration | null {
   const typeChecker = parserServices.program.getTypeChecker();
   const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node.name);
@@ -19,7 +19,7 @@ export function getImportDeclarationOfJSX(
 function getImportDeclarationOfSymbol(
   // eslint-disable-next-line @typescript-eslint/ban-types -- This Symbol is imported from "typescript"
   symbol: Symbol,
-  parserServices: ParserServices
+  parserServices: ParserServices,
 ): TSESTree.ImportDeclaration | null {
   if (symbol.declarations == null || symbol.declarations.length < 1) {
     return null;

@@ -46,7 +46,7 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
           const specificComponent = findSpecificComponent(
             componentName,
             sourceCode.getText(attribute.name),
-            sourceCode.getText(attribute.value)
+            sourceCode.getText(attribute.value),
           );
           if (specificComponent == null) {
             continue;
@@ -80,7 +80,7 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
 function createFixToRenameEndTag(
   jsxNode: TSESTree.JSXOpeningElement,
   validComponent: string,
-  fixer: TSESLint.RuleFixer
+  fixer: TSESLint.RuleFixer,
 ) {
   const endNode = (jsxNode.parent as TSESTree.JSXElement)?.closingElement;
   return endNode ? fixer.replaceText(endNode.name, validComponent) : null;
@@ -89,7 +89,7 @@ function createFixToRenameEndTag(
 function createFixToRemoveAttribute(
   attribute: TSESTree.JSXAttribute,
   jsxNode: TSESTree.JSXOpeningElement,
-  fixer: TSESLint.RuleFixer
+  fixer: TSESLint.RuleFixer,
 ) {
   const attributeIndex = jsxNode.attributes.findIndex((a) => a === attribute);
 
@@ -120,7 +120,7 @@ function createFixToInsertImport(
   jsxNode: TSESTree.JSXOpeningElement,
   validComponent: string,
   parserServices: ParserServices,
-  fixer: TSESLint.RuleFixer
+  fixer: TSESLint.RuleFixer,
 ) {
   const importDecl = getImportDeclarationOfJSX(jsxNode, parserServices);
   if (!importDecl) {
@@ -128,7 +128,7 @@ function createFixToInsertImport(
   }
 
   const sameNameSpecifier = importDecl.specifiers.find(
-    (sp) => sp.type === AST_NODE_TYPES.ImportSpecifier && sp.local.name === validComponent
+    (sp) => sp.type === AST_NODE_TYPES.ImportSpecifier && sp.local.name === validComponent,
   );
   if (sameNameSpecifier != null) {
     // in case of already imported

@@ -13,7 +13,7 @@ const attributeMap: Record<string, Record<string, string>> = {
 export function findSpecificComponent(
   componentName: string,
   rawAtributeName: string,
-  rawAttributeValue: string
+  rawAttributeValue: string,
 ): string | null {
   const attributeName = getNonShorthand(componentName, rawAtributeName) || rawAtributeName;
   if (!attributeMap[attributeName]) {

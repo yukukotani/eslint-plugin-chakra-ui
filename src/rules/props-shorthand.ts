@@ -89,7 +89,7 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
 function getAttributeText(
   attribute: TSESTree.JSXAttribute,
   key: string,
-  sourceCode: Readonly<TSESLint.SourceCode>
+  sourceCode: Readonly<TSESLint.SourceCode>,
 ): string {
   if (attribute.value) {
     const valueText = sourceCode.getText(attribute.value);
