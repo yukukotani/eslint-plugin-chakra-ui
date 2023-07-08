@@ -63,6 +63,20 @@ test("test", () => {
         `,
       },
       {
+        name: "Require Flex component in self-closing format",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box display="flex" margin="2" paddingTop={4} />
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex margin="2" paddingTop={4} />
+        `,
+      },
+      {
         name: "Require Flex component with last attribute",
         code: `
           import { Box } from "@chakra-ui/react";
@@ -102,6 +116,27 @@ test("test", () => {
         `,
       },
       {
+        name: "Require Flex component with multi-line attributes in self-closing format",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box
+            display="flex"
+            margin="2"
+            paddingTop={4}
+          />
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex
+            margin="2"
+            paddingTop={4}
+          />
+        `,
+      },
+      {
         name: "Require Flex component with last attribute in multi-line attributes",
         code: `
           import { Box } from "@chakra-ui/react";
@@ -129,7 +164,7 @@ test("test", () => {
       {
         name: "Require Flex component with multi-line import",
         code: `
-          import { 
+          import {
             Box,
             Text,
             List,
@@ -139,7 +174,7 @@ test("test", () => {
         `,
         errors: [{ messageId: "requireSpecificComponent" }],
         output: `
-          import { 
+          import {
             Box,
             Text,
             List,
@@ -195,6 +230,37 @@ test("test", () => {
           <Flex>
             Hello
           </Flex>
+        `,
+      },
+      {
+        name: "Require Flex component with only one attribute in self-closing format",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box display="flex" />
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex />
+        `,
+      },
+
+      {
+        name: "Require Flex component with only one attribute in self-closing and multi-line format",
+        code: `
+          import { Box } from "@chakra-ui/react";
+
+          <Box
+            display="flex"
+          />
+        `,
+        errors: [{ messageId: "requireSpecificComponent" }],
+        output: `
+          import { Box, Flex } from "@chakra-ui/react";
+
+          <Flex />
         `,
       },
     ],

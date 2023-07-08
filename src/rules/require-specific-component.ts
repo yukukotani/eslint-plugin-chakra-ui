@@ -97,7 +97,12 @@ function createFixToRemoveAttribute(
     // in case of only one attribute
     // remove attribute and extra space
     const startAttributeRangeWithSpaces = jsxNode.name.range[1];
-    const endAttributeRangeWithSpaces = jsxNode.range[1] - 1;
+    const tagCloserLength = jsxNode.selfClosing
+      ? attribute.loc.end.line <= jsxNode.loc.end.line
+        ? 3 // `\n/>`
+        : 2 // `/>`
+      : 1; // `>`
+    const endAttributeRangeWithSpaces = jsxNode.range[1] - tagCloserLength;
     return fixer.removeRange([startAttributeRangeWithSpaces, endAttributeRangeWithSpaces]);
   }
 
