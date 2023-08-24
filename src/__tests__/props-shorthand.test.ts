@@ -1,18 +1,21 @@
-import { TSESLint } from "@typescript-eslint/utils";
-import { describe, it } from "vitest";
+import { afterAll, describe, it } from "vitest";
 import { propsShorthandRule } from "../rules/props-shorthand";
+import { RuleTester } from "@typescript-eslint/rule-tester";
+import path from "path";
 
-TSESLint.RuleTester.describe = describe;
-TSESLint.RuleTester.it = it;
+RuleTester.describe = describe;
+RuleTester.it = it;
+RuleTester.afterAll = afterAll;
 
-const tester = new TSESLint.RuleTester({
-  parser: require.resolve("@typescript-eslint/parser"),
+const tester = new RuleTester({
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020,
-    sourceType: "module",
     ecmaFeatures: {
       jsx: true,
     },
+    tsconfigRootDir: path.join(__dirname, "fixtures"),
+    project: "./tsconfig.json",
   },
 });
 

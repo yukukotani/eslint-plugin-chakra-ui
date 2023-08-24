@@ -25,6 +25,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.4.1
     version: 6.4.1(eslint@8.47.0)(typescript@5.1.6)
+  '@typescript-eslint/rule-tester':
+    specifier: ^6.4.1
+    version: 6.4.1(@eslint/eslintrc@2.1.2)(eslint@8.47.0)(typescript@5.1.6)
   '@typescript-eslint/types':
     specifier: ^6.4.1
     version: 6.4.1
@@ -598,6 +601,25 @@ packages:
       typescript: 5.1.6
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@typescript-eslint/rule-tester@6.4.1(@eslint/eslintrc@2.1.2)(eslint@8.47.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-pP7QnJ/uNB3nOoiPvMaRC0XcwlLxVVWC49lQfxkxMmthT7XTSWJ4G1edmDW47Ue1PxoP5ShoO0PxK1ZN5+NjAA==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    peerDependencies:
+      '@eslint/eslintrc': '>=2'
+      eslint: '>=8'
+    dependencies:
+      '@eslint/eslintrc': 2.1.2
+      '@typescript-eslint/typescript-estree': 6.4.1(typescript@5.1.6)
+      '@typescript-eslint/utils': 6.4.1(eslint@8.47.0)(typescript@5.1.6)
+      ajv: 6.12.6
+      eslint: 8.47.0
+      lodash.merge: 4.6.2
+      semver: 7.5.4
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
     dev: true
 
   /@typescript-eslint/scope-manager@6.4.1:
