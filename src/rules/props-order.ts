@@ -28,6 +28,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
     docs: {
       description: "Enforce a order of the Chakra component's props.",
       recommended: "recommended",
+      requiresTypeChecking: true,
       url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/props-order.md",
     },
     messages: {

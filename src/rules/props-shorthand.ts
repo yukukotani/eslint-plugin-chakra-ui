@@ -15,6 +15,7 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
       docs: {
         description: "Enforces the usage of shorthand Chakra component props.",
         recommended: "recommended",
+        requiresTypeChecking: true,
         url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/props-shorthand.md",
       },
       messages: {
