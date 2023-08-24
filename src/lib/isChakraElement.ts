@@ -1,7 +1,10 @@
-import { TSESTree, ParserServices } from "@typescript-eslint/utils";
+import { TSESTree, ParserServicesWithTypeInformation } from "@typescript-eslint/utils";
 import { Declaration, ImportDeclaration, Symbol, SyntaxKind, Expression } from "typescript";
 
-export function isChakraElement(node: TSESTree.JSXOpeningElement, parserServices: ParserServices): boolean {
+export function isChakraElement(
+  node: TSESTree.JSXOpeningElement,
+  parserServices: ParserServicesWithTypeInformation,
+): boolean {
   const typeChecker = parserServices.program.getTypeChecker();
   const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node.name);
   const symbol = typeChecker.getSymbolAtLocation(tsNode);

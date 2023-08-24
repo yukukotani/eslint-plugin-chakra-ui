@@ -1,6 +1,7 @@
 import { AST_NODE_TYPES, TSESLint, TSESTree } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getPriority } from "../lib/getPriorityIndex";
+import { getParserServices } from "@typescript-eslint/utils/eslint-utils";
 
 type Options = [
   {
@@ -26,7 +27,8 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
     type: "suggestion",
     docs: {
       description: "Enforce a order of the Chakra component's props.",
-      recommended: "error",
+      recommended: "recommended",
+      requiresTypeChecking: true,
       url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/props-order.md",
     },
     messages: {
@@ -62,10 +64,10 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
 
   defaultOptions: [{}],
 
-  create: ({ parserServices, report, getSourceCode, options }) => {
-    if (!parserServices) {
-      return {};
-    }
+  create: (ctx) => {
+    const { report, getSourceCode, options } = ctx;
+    const parserServices = getParserServices(ctx, false);
+
     const option = options[0];
 
     return {

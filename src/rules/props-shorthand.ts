@@ -1,6 +1,7 @@
 import { AST_NODE_TYPES, TSESLint, TSESTree } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getNonShorthand, getShorthand } from "../lib/getShorthand";
+import { getParserServices } from "@typescript-eslint/utils/eslint-utils";
 
 type Options = {
   noShorthand: boolean;
@@ -13,7 +14,8 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
       type: "suggestion",
       docs: {
         description: "Enforces the usage of shorthand Chakra component props.",
-        recommended: "error",
+        recommended: "recommended",
+        requiresTypeChecking: true,
         url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/props-shorthand.md",
       },
       messages: {
@@ -40,10 +42,9 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
 
     defaultOptions: [{}],
 
-    create: ({ parserServices, report, getSourceCode, options }) => {
-      if (!parserServices) {
-        return {};
-      }
+    create: (ctx) => {
+      const { report, getSourceCode, options } = ctx;
+      const parserServices = getParserServices(ctx, false);
 
       const { noShorthand = false, applyToAllComponents = false } = options[0] || {};
 

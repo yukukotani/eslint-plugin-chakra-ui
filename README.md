@@ -11,39 +11,46 @@ This plugin depends on TypeScript to check whether the component is a Chakra com
 
 TypeScript 4.4 or higher is supported. We don't test 4.3 or below but it probably works.
 
+typescript-eslint v6 or higher is supported. **v5 or below is NOT supported**.
+
 ## Installation
 
-You'll first need to install [ESLint](https://eslint.org/):
+You'll first need to install [ESLint](https://eslint.org/).
 
 ```sh
 npm i eslint --save-dev
 ```
 
-Next, install `eslint-plugin-chakra-ui`, `@typescript-eslint/parser`:
+Next, install `eslint-plugin-chakra-ui`, `@typescript-eslint/parser`.
 
 ```sh
 npm install eslint-plugin-chakra-ui @typescript-eslint/parser --save-dev
 ```
 
-Then set the `parser` property and add `chakra-ui` to the `plugins` property of your `.eslintrc` configuration file:
+Then set the `parser` property and add `chakra-ui` to the `plugins` property of your `.eslintrc.js` configuration file. You also need to set `project` and `tsconfigRootDir` in `parserOptions` to [enable TypeScript information](https://typescript-eslint.io/linting/typed-linting).
 
-```json
-{
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["chakra-ui"]
-}
+```js
+module.exports = {
+  parser: "@typescript-eslint/parser",
+  plugins: ["chakra-ui"],
+  parserOptions: {
+    project: true,
+    tsconfigRootDir: __dirname,
+  },
+};
 ```
 
 Now you can add chakra-ui rules:
 
-```json
-{
-  "rules": {
+```js
+module.exports = {
+  // ...
+  rules: {
     "chakra-ui/props-order": "error",
     "chakra-ui/props-shorthand": "error",
-    "chakra-ui/require-specific-component": "error"
-  }
-}
+    "chakra-ui/require-specific-component": "error",
+  },
+};
 ```
 
 ## Supported Rules
