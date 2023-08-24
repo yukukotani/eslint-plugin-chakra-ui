@@ -1,5 +1,5 @@
 import { TSESLint } from "@typescript-eslint/utils";
-import { test } from "uvu";
+import { test } from "vitest";
 import { propsShorthandRule } from "../rules/props-shorthand";
 
 const tester = new TSESLint.RuleTester({
@@ -20,7 +20,7 @@ test("test", () => {
         name: "Shorthand",
         code: `
           import { Box } from "@chakra-ui/react";
-          
+
           <Box m="2" pt={4}>Hello</Box>
         `,
       },
@@ -28,7 +28,7 @@ test("test", () => {
         name: "No Shorthand",
         code: `
           import { Box } from "@chakra-ui/react";
-          
+
           <Box margin="2" paddingTop={4}>Hello</Box>
         `,
         options: [{ noShorthand: true }],
@@ -37,7 +37,7 @@ test("test", () => {
         name: "Grid and Flex props",
         code: `
           import { Grid, Flex } from "@chakra-ui/react";
-          
+
           <>
             <Grid gap={2}>Hello</Grid>
             <Flex gridGap={2} justify="center">Hello</Flex>
@@ -48,7 +48,7 @@ test("test", () => {
         name: "Not chakra element",
         code: `
           import { NotChakra } from "not-chakra";
-          
+
           <NotChakra margin="1">Hello</NotChakra>
         `,
       },
@@ -58,13 +58,13 @@ test("test", () => {
         name: "Require shorthand",
         code: `
           import { Box } from "@chakra-ui/react";
-            
+
           <Box margin="2" paddingTop={4}>Hello</Box>
       `,
         errors: [{ messageId: "enforcesShorthand" }, { messageId: "enforcesShorthand" }],
         output: `
           import { Box } from "@chakra-ui/react";
-            
+
           <Box m="2" pt={4}>Hello</Box>
       `,
       },
@@ -72,14 +72,14 @@ test("test", () => {
         name: "Require no shorthand",
         code: `
           import { Box } from "@chakra-ui/react";
-            
+
           <Box m="2" pt={4}>Hello</Box>
       `,
         options: [{ noShorthand: true }],
         errors: [{ messageId: "enforcesNoShorthand" }, { messageId: "enforcesNoShorthand" }],
         output: `
           import { Box } from "@chakra-ui/react";
-            
+
           <Box margin="2" paddingTop={4}>Hello</Box>
       `,
       },
@@ -87,7 +87,7 @@ test("test", () => {
         name: "Require Grid and Flex props shorthand",
         code: `
           import { Grid, Flex } from "@chakra-ui/react";
-            
+
           <>
             <Grid gridGap={2}>Hello</Grid>
             <Flex gridGap={2} justifyContent="center">Hello</Flex>
@@ -96,7 +96,7 @@ test("test", () => {
         errors: [{ messageId: "enforcesShorthand" }, { messageId: "enforcesShorthand" }],
         output: `
           import { Grid, Flex } from "@chakra-ui/react";
-            
+
           <>
             <Grid gap={2}>Hello</Grid>
             <Flex gridGap={2} justify="center">Hello</Flex>
@@ -107,7 +107,7 @@ test("test", () => {
         name: "Support JSXSpreadAttribute",
         code: `
           import { Grid, Flex } from "@chakra-ui/react";
-            
+
           <>
             <Grid {...{w:2}} gridGap={2}>Hello</Grid>
             <Flex {...{w:2}} gridGap={2} justifyContent="center">Hello</Flex>
@@ -116,7 +116,7 @@ test("test", () => {
         errors: [{ messageId: "enforcesShorthand" }, { messageId: "enforcesShorthand" }],
         output: `
           import { Grid, Flex } from "@chakra-ui/react";
-            
+
           <>
             <Grid {...{w:2}} gap={2}>Hello</Grid>
             <Flex {...{w:2}} gridGap={2} justify="center">Hello</Flex>
@@ -126,5 +126,3 @@ test("test", () => {
     ],
   });
 });
-
-test.run();

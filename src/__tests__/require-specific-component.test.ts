@@ -1,5 +1,5 @@
 import { TSESLint } from "@typescript-eslint/utils";
-import { test } from "uvu";
+import { test } from "vitest";
 import { requireSpecificComponentRule } from "../rules/require-specific-component";
 
 const tester = new TSESLint.RuleTester({
@@ -266,5 +266,3 @@ test("test", () => {
     ],
   });
 });
-
-test.run();

@@ -1,5 +1,5 @@
 import { TSESLint } from "@typescript-eslint/utils";
-import { test } from "uvu";
+import { test } from "vitest";
 import { propsOrderRule } from "../rules/props-order";
 
 const tester = new TSESLint.RuleTester({
@@ -364,5 +364,3 @@ test("test", () => {
     ],
   });
 });
-
-test.run();
