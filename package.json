@@ -22,7 +22,7 @@
     "lint:prettier": "prettier --check ./src",
     "fix:prettier": "prettier --write ./src",
     "build": "rm -rf ./dist && swc ./src -d dist",
-    "test": "uvu -r @swc-node/register src/__tests__",
+    "test": "vitest run src/__tests__",
     "test:watch": "watchlist src -- pnpm run test",
     "prepublishOnly": "pnpm run build"
   },
@@ -30,7 +30,6 @@
     "@typescript-eslint/utils": "^5.61.0"
   },
   "devDependencies": {
-    "@swc-node/register": "^1.6.6",
     "@swc/cli": "^0.1.62",
     "@swc/core": "^1.3.68",
     "@types/node": "^18.17.6",
@@ -43,7 +42,8 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.2",
     "typescript": "^5.1.6",
-    "uvu": "^0.5.6",
+    "vite": "^4.4.9",
+    "vitest": "^0.34.2",
     "watchlist": "^0.3.1"
   },
   "engines": {

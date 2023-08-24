@@ -1,6 +1,9 @@
 import { TSESLint } from "@typescript-eslint/utils";
-import { test } from "uvu";
 import { propsOrderRule } from "../rules/props-order";
+import { describe, it } from "vitest";
+
+TSESLint.RuleTester.describe = describe;
+TSESLint.RuleTester.it = it;
 
 const tester = new TSESLint.RuleTester({
   parser: require.resolve("@typescript-eslint/parser"),
@@ -13,55 +16,54 @@ const tester = new TSESLint.RuleTester({
   },
 });
 
-test("test", () => {
-  tester.run("props-order", propsOrderRule, {
-    valid: [
-      {
-        name: "Sorted style props",
-        code: `
+tester.run("props-order", propsOrderRule, {
+  valid: [
+    {
+      name: "Sorted style props",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box key={key} as="div" m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
         `,
-      },
-      {
-        name: "Not chakra element",
-        code: `
+    },
+    {
+      name: "Not chakra element",
+      code: `
           import { NotChakra } from "not-chakra";
           <NotChakra m="1" fontSize="md" px="2" py={2}>Hello</NotChakra>
         `,
-      },
-      {
-        name: "Spreading should not be sorted",
-        code: `
+    },
+    {
+      name: "Spreading should not be sorted",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box py="2" {...props} as="div">Hello</Box>;
       `,
-      },
-      {
-        name: "Last priority of style props should be placed before `other props`",
-        // priorityGroups.at(-1).at(-1) is outline;
-        code: `
+    },
+    {
+      name: "Last priority of style props should be placed before `other props`",
+      // priorityGroups.at(-1).at(-1) is outline;
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box outline='outline' aaaa>Hello</Box>;
       `,
-      },
-    ],
-    invalid: [
-      {
-        name: "Not sorted",
-        code: `
+    },
+  ],
+  invalid: [
+    {
+      name: "Not sorted",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box px="2" as="div" onClick={onClick} m="1" key={key} {...props} fontSize="md" py={2}>Hello</Box>
       `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box key={key} as="div" m="1" px="2" onClick={onClick} {...props} py={2} fontSize="md">Hello</Box>
       `,
-      },
-      {
-        name: "Multiple lines must not be concatenated",
-        code: `
+    },
+    {
+      name: "Multiple lines must not be concatenated",
+      code: `
                 import { Box } from "@chakra-ui/react";
                 <Box
                   px="2"
@@ -72,8 +74,8 @@ test("test", () => {
                   Hello
                 </Box>;
             `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
                 import { Box } from "@chakra-ui/react";
                 <Box
                   as="div"
@@ -84,34 +86,34 @@ test("test", () => {
                   Hello
                 </Box>;
             `,
-      },
-      {
-        name: "`Other Props` should be sorted in alphabetical order",
-        code: `
+    },
+    {
+      name: "`Other Props` should be sorted in alphabetical order",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box onClick={onClick} data-test-id="data-test-id" data-index={1}>Hello</Box>
         `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box data-index={1} data-test-id="data-test-id" onClick={onClick}>Hello</Box>
         `,
-      },
-      {
-        name: "`Style Props` of same group should be sorted in defined order, not alphabetical",
-        code: `
+    },
+    {
+      name: "`Style Props` of same group should be sorted in defined order, not alphabetical",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box sx={sx} textStyle={textStyle} layerStyle={layerStyle} as={as}>Hello</Box>
         `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box as={as} sx={sx} layerStyle={layerStyle} textStyle={textStyle}>Hello</Box>
         `,
-      },
-      {
-        name: "`Style Props` of same group should be sorted in defined order, not alphabetical",
-        code: `
+    },
+    {
+      name: "`Style Props` of same group should be sorted in defined order, not alphabetical",
+      code: `
         import { Box } from "@chakra-ui/react";
         <Box
           animation="animation"
@@ -137,8 +139,8 @@ test("test", () => {
           Same priority should be sorted in defined order
         </Box>;
         `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
         import { Box } from "@chakra-ui/react";
         <Box
           animation="animation"
@@ -164,10 +166,10 @@ test("test", () => {
           Same priority should be sorted in defined order
         </Box>;
         `,
-      },
-      {
-        name: "Different priorities should be sorted by priorities",
-        code: `
+    },
+    {
+      name: "Different priorities should be sorted by priorities",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box
             as={as}
@@ -191,8 +193,8 @@ test("test", () => {
             Hello
           </Box>;
         `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box
             as={as}
@@ -216,10 +218,10 @@ test("test", () => {
             Hello
           </Box>;
         `,
-      },
-      {
-        name: "Default reservedProps should be sorted",
-        code: `
+    },
+    {
+      name: "Default reservedProps should be sorted",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box
             key={key}
@@ -230,8 +232,8 @@ test("test", () => {
             Hello
           </Box>;
         `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box
             className={className}
@@ -242,10 +244,10 @@ test("test", () => {
             Hello
           </Box>;
         `,
-      },
-      {
-        name: "Different type of props should be sorted in order, except componentSpecificProps",
-        code: `
+    },
+    {
+      name: "Different type of props should be sorted in order, except componentSpecificProps",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box
             aria-label="aria-label"
@@ -256,8 +258,8 @@ test("test", () => {
             Hello
           </Box>;
         `,
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box
             className={className}
@@ -268,10 +270,10 @@ test("test", () => {
             Hello
           </Box>;
         `,
-      },
-      {
-        name: "if keys are `Other Props`, they should be sorted in alphabetical order",
-        code: `
+    },
+    {
+      name: "if keys are `Other Props`, they should be sorted in alphabetical order",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box
             className={className}
@@ -282,13 +284,13 @@ test("test", () => {
             Hello
           </Box>;
         `,
-        options: [
-          {
-            firstProps: [],
-          },
-        ],
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      options: [
+        {
+          firstProps: [],
+        },
+      ],
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box
             aria-label="aria-label"
@@ -299,10 +301,10 @@ test("test", () => {
             Hello
           </Box>;
         `,
-      },
-      {
-        name: "if lastProps is specified, that must be the last.",
-        code: `
+    },
+    {
+      name: "if lastProps is specified, that must be the last.",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box
             className={className}
@@ -313,13 +315,13 @@ test("test", () => {
             onClick should be the last
           </Box>;
         `,
-        options: [
-          {
-            lastProps: ["onClick", "aria-label"],
-          },
-        ],
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      options: [
+        {
+          lastProps: ["onClick", "aria-label"],
+        },
+      ],
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box
             className={className}
@@ -330,10 +332,10 @@ test("test", () => {
             onClick should be the last
           </Box>;
         `,
-      },
-      {
-        name: "if same property is set for both firstProps and lastProps, that of lastProps will be ignored.",
-        code: `
+    },
+    {
+      name: "if same property is set for both firstProps and lastProps, that of lastProps will be ignored.",
+      code: `
           import { Box } from "@chakra-ui/react";
           <Box
             onClick={onClick}
@@ -343,14 +345,14 @@ test("test", () => {
           If the same key is given different priorities in option, ignore all but the first.
           </Box>;
         `,
-        options: [
-          {
-            lastProps: ["onClick", "aria-label"],
-            firstProps: ["onClick", "aria-label"],
-          },
-        ],
-        errors: [{ messageId: "invalidOrder" }],
-        output: `
+      options: [
+        {
+          lastProps: ["onClick", "aria-label"],
+          firstProps: ["onClick", "aria-label"],
+        },
+      ],
+      errors: [{ messageId: "invalidOrder" }],
+      output: `
           import { Box } from "@chakra-ui/react";
           <Box
             onClick={onClick}
@@ -360,9 +362,6 @@ test("test", () => {
           If the same key is given different priorities in option, ignore all but the first.
           </Box>;
         `,
-      },
-    ],
-  });
+    },
+  ],
 });
-
-test.run();
