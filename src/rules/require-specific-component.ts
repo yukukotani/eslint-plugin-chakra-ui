@@ -1,14 +1,15 @@
-import { AST_NODE_TYPES, TSESLint, TSESTree, ParserServices } from "@typescript-eslint/utils";
+import { AST_NODE_TYPES, TSESLint, TSESTree, ParserServicesWithTypeInformation } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getImportDeclarationOfJSX } from "../lib/getImportDeclaration";
 import { findSpecificComponent } from "../lib/findSpecificComponent";
+import { getParserServices } from "@typescript-eslint/utils/eslint-utils";
 
 export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificComponent", []> = {
   meta: {
     type: "suggestion",
     docs: {
       description: "Enforces the usage of specific Chakra component.",
-      recommended: "error",
+      recommended: "recommended",
       url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/require-specific-component.md",
     },
     messages: {
@@ -21,10 +22,9 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
 
   defaultOptions: [],
 
-  create: ({ parserServices, report, getSourceCode }) => {
-    if (!parserServices) {
-      return {};
-    }
+  create: (ctx) => {
+    const { report, getSourceCode } = ctx;
+    const parserServices = getParserServices(ctx, false);
 
     return {
       JSXOpeningElement(node) {
@@ -119,7 +119,7 @@ function createFixToRemoveAttribute(
 function createFixToInsertImport(
   jsxNode: TSESTree.JSXOpeningElement,
   validComponent: string,
-  parserServices: ParserServices,
+  parserServices: ParserServicesWithTypeInformation,
   fixer: TSESLint.RuleFixer,
 ) {
   const importDecl = getImportDeclarationOfJSX(jsxNode, parserServices);
