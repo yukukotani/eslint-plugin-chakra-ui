@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/swcrc",
   "exclude": "src/__tests__/",
   "jsc": {
     "parser": {
