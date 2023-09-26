@@ -58,13 +58,15 @@ const shorthandMap: ShorthandMap = {
     gridColumnGap: "columnGap",
     gridColumn: "column",
     gridRow: "row",
-    gridArea: "area",
     gridAutoFlow: "autoFlow",
     gridAutoRows: "autoRows",
     gridAutoColumns: "autoColumns",
     gridTemplateRows: "templateRows",
     gridTemplateColumns: "templateColumns",
     gridTemplateAreas: "templateAreas",
+  },
+  GridItem: {
+    gridArea: "area",
   },
 };
 

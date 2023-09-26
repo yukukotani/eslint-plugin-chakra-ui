@@ -128,5 +128,19 @@ tester.run("props-shorthand", propsShorthandRule, {
           </>
       `,
     },
+    {
+      name: "Require GridItem area prop shorthand",
+      code: `
+          import { GridItem } from "@chakra-ui/react";
+
+          <GridItem gridArea="2 / 1 / 2 / 4">Hello</GridItem>
+      `,
+      errors: [{ messageId: "enforcesShorthand" }],
+      output: `
+          import { GridItem } from "@chakra-ui/react";
+
+          <GridItem area="2 / 1 / 2 / 4">Hello</GridItem>
+      `,
+    },
   ],
 });
