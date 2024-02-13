@@ -45,11 +45,10 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
     create: (ctx) => {
       const { report, getSourceCode, options } = ctx;
       const { noShorthand = false, applyToAllComponents = false } = options[0] || {};
-      const parserServices = !applyToAllComponents ? getParserServices(ctx, false) : undefined;
 
       return {
         JSXOpeningElement(node) {
-          if (parserServices && !isChakraElement(node, parserServices)) {
+          if (!applyToAllComponents && !isChakraElement(node, getParserServices(ctx, false))) {
             return;
           }
 
