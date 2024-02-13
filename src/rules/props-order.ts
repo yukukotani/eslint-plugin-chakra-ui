@@ -1,7 +1,7 @@
 import { AST_NODE_TYPES, TSESLint, TSESTree } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getPriority } from "../lib/getPriorityIndex";
-import { getParserServices } from "@typescript-eslint/utils/eslint-utils";
+import { createGetParserServices } from "../lib/createGetParserServices";
 
 type Options = [
   {
@@ -67,10 +67,11 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
   create: (ctx) => {
     const { report, getSourceCode, options } = ctx;
     const option = options[0];
+    const getParserServices = createGetParserServices(ctx);
 
     return {
       JSXOpeningElement(node) {
-        if (!option?.applyToAllComponents && !isChakraElement(node, getParserServices(ctx, false))) {
+        if (!option?.applyToAllComponents && !isChakraElement(node, getParserServices())) {
           return;
         }
 
