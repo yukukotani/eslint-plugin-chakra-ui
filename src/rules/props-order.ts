@@ -66,13 +66,11 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
 
   create: (ctx) => {
     const { report, getSourceCode, options } = ctx;
-    const parserServices = getParserServices(ctx, false);
-
     const option = options[0];
 
     return {
       JSXOpeningElement(node) {
-        if (!option?.applyToAllComponents && !isChakraElement(node, parserServices)) {
+        if (!option?.applyToAllComponents && !isChakraElement(node, getParserServices(ctx, false))) {
           return;
         }
 
