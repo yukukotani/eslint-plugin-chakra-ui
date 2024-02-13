@@ -1,7 +1,7 @@
 import { AST_NODE_TYPES, TSESLint, TSESTree } from "@typescript-eslint/utils";
 import { isChakraElement } from "../lib/isChakraElement";
 import { getNonShorthand, getShorthand } from "../lib/getShorthand";
-import { getParserServices } from "@typescript-eslint/utils/eslint-utils";
+import { createGetParserServices } from "../lib/createGetParserServices";
 
 type Options = {
   noShorthand: boolean;
@@ -45,10 +45,11 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
     create: (ctx) => {
       const { report, getSourceCode, options } = ctx;
       const { noShorthand = false, applyToAllComponents = false } = options[0] || {};
+      const getParserServices = createGetParserServices(ctx);
 
       return {
         JSXOpeningElement(node) {
-          if (!applyToAllComponents && !isChakraElement(node, getParserServices(ctx, false))) {
+          if (!applyToAllComponents && !isChakraElement(node, getParserServices())) {
             return;
           }
 
