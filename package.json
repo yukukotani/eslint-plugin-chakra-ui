@@ -32,7 +32,7 @@
   "devDependencies": {
     "@swc/cli": "^0.1.62",
     "@swc/core": "^1.4.1",
-    "@types/node": "^18.19.30",
+    "@types/node": "^18.19.63",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@typescript-eslint/rule-tester": "^6.21.0",
