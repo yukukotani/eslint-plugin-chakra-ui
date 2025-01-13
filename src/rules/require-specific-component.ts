@@ -9,8 +9,6 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
     type: "suggestion",
     docs: {
       description: "Enforces the usage of specific Chakra component.",
-      recommended: "recommended",
-      requiresTypeChecking: true,
       url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/require-specific-component.md",
     },
     messages: {
@@ -24,7 +22,7 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
   defaultOptions: [],
 
   create: (ctx) => {
-    const { report, getSourceCode } = ctx;
+    const { report, sourceCode } = ctx;
     const parserServices = getParserServices(ctx, false);
 
     return {
@@ -33,7 +31,6 @@ export const requireSpecificComponentRule: TSESLint.RuleModule<"requireSpecificC
           return;
         }
 
-        const sourceCode = getSourceCode();
         const componentName = sourceCode.getText(node.name);
         if (componentName !== "Box") {
           return;

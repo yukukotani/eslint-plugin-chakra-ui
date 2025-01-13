@@ -27,10 +27,9 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
     type: "suggestion",
     docs: {
       description: "Enforce a order of the Chakra component's props.",
-      recommended: "recommended",
-      requiresTypeChecking: true,
       url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/props-order.md",
     },
+    hasSuggestions: true,
     messages: {
       invalidOrder: "Invalid Chakra props order.",
     },
@@ -65,7 +64,7 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
   defaultOptions: [{}],
 
   create: (ctx) => {
-    const { report, getSourceCode, options } = ctx;
+    const { report, sourceCode, options } = ctx;
     const option = options[0];
     const getParserServices = createGetParserServices(ctx);
 
@@ -83,7 +82,6 @@ export const propsOrderRule: TSESLint.RuleModule<"invalidOrder", Options> = {
         };
         const sorted = sortAttributes(node.attributes, config);
 
-        const sourceCode = getSourceCode();
         for (const [index, attribute] of node.attributes.entries()) {
           if (attribute.type !== AST_NODE_TYPES.JSXAttribute) {
             continue;
