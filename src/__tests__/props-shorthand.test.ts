@@ -8,14 +8,15 @@ RuleTester.it = it;
 RuleTester.afterAll = afterAll;
 
 const tester = new RuleTester({
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 2020,
-    ecmaFeatures: {
-      jsx: true,
+  languageOptions: {
+    parserOptions: {
+      ecmaVersion: 2020,
+      ecmaFeatures: {
+        jsx: true,
+      },
+      tsconfigRootDir: path.join(__dirname, "fixtures"),
+      project: "./tsconfig.json",
     },
-    tsconfigRootDir: path.join(__dirname, "fixtures"),
-    project: "./tsconfig.json",
   },
 });
 
