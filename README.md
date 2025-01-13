@@ -11,7 +11,7 @@ This plugin depends on TypeScript to check whether the component is a Chakra com
 
 TypeScript 4.4 or higher is supported. We don't test 4.3 or below but it probably works.
 
-typescript-eslint v6 or higher is supported. **v5 or below is NOT supported**.
+typescript-eslint v8 or higher is supported. **v7 or below is NOT supported**.
 
 ## Installation
 
@@ -27,15 +27,22 @@ Next, install `eslint-plugin-chakra-ui`, `@typescript-eslint/parser`.
 npm install eslint-plugin-chakra-ui @typescript-eslint/parser --save-dev
 ```
 
-Then set the `parser` property and add `chakra-ui` to the `plugins` property of your `.eslintrc.js` configuration file. You also need to set `project` and `tsconfigRootDir` in `parserOptions` to [enable TypeScript information](https://typescript-eslint.io/linting/typed-linting).
+Then set the `parser` property and add `chakra-ui` to the `plugins` property of your `eslint.congig.{js,mjs,cjs}` configuration file. You also need to set `project` and `tsconfigRootDir` in `parserOptions` to [enable TypeScript information](https://typescript-eslint.io/getting-started/typed-linting/).
 
 ```js
-module.exports = {
-  parser: "@typescript-eslint/parser",
-  plugins: ["chakra-ui"],
-  parserOptions: {
-    project: true,
-    tsconfigRootDir: __dirname,
+import parser from "@typescript-eslint/parser";
+import chakraUiPlugin from "eslint-plugin-chakra-ui";
+
+export default {
+  plugins: {
+    "chakra-ui": chakraUiPlugin,
+  },
+  languageOptions: {
+    parserOptions: {
+      parser,
+      project: ["./tsconfig.json"],
+      tsconfigRootDir: __dirname, // or import.meta.dirname
+    },
   },
 };
 ```
@@ -43,12 +50,23 @@ module.exports = {
 Now you can add chakra-ui rules:
 
 ```js
-module.exports = {
+export default {
   // ...
   rules: {
     "chakra-ui/props-order": "error",
     "chakra-ui/props-shorthand": "error",
     "chakra-ui/require-specific-component": "error",
+  },
+};
+```
+
+You can also load rules in bulk by accessing recommended:
+
+```js
+export default {
+  // ...
+  rules: {
+    ...chakraUiPlugin.configs.recommended,
   },
 };
 ```
