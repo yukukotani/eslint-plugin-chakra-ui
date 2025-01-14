@@ -17,7 +17,6 @@ export function getImportDeclarationOfJSX(
 }
 
 function getImportDeclarationOfSymbol(
-  // eslint-disable-next-line @typescript-eslint/ban-types -- This Symbol is imported from "typescript"
   symbol: Symbol,
   parserServices: ParserServicesWithTypeInformation,
 ): TSESTree.ImportDeclaration | null {

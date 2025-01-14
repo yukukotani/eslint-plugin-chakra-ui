@@ -14,8 +14,6 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
       type: "suggestion",
       docs: {
         description: "Enforces the usage of shorthand Chakra component props.",
-        recommended: "recommended",
-        requiresTypeChecking: true,
         url: "https://github.com/yukukotani/eslint-plugin-chakra-ui/blob/main/docs/rules/props-shorthand.md",
       },
       messages: {
@@ -43,7 +41,7 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
     defaultOptions: [{}],
 
     create: (ctx) => {
-      const { report, getSourceCode, options } = ctx;
+      const { report, sourceCode, options } = ctx;
       const { noShorthand = false, applyToAllComponents = false } = options[0] || {};
       const getParserServices = createGetParserServices(ctx);
 
@@ -58,7 +56,6 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
               continue;
             }
 
-            const sourceCode = getSourceCode();
             const componentName = sourceCode.getText(node.name);
             const propName = attribute.name.name.toString();
             const newPropName = noShorthand
@@ -73,7 +70,6 @@ export const propsShorthandRule: TSESLint.RuleModule<"enforcesShorthand" | "enfo
                   validName: newPropName,
                 },
                 fix(fixer) {
-                  const sourceCode = getSourceCode();
                   const newAttributeText = getAttributeText(attribute, newPropName, sourceCode);
 
                   return fixer.replaceText(attribute, newAttributeText);

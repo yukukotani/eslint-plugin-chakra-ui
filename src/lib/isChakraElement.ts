@@ -18,7 +18,6 @@ export function isChakraElement(
   return specifier === "@chakra-ui/react";
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types -- This Symbol is imported from "typescript"
 function getModuleSpecifierOfImportSpecifier(symbol: Symbol): string | null {
   if (symbol.declarations == null || symbol.declarations.length < 1) {
     return null;
