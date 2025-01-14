@@ -23,7 +23,6 @@ export default tseslint.config(
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.ts"],
     plugins: {
-      "@typescript-eslint": plugins,
       "unused-imports": unusedImports,
     },
     rules: {
