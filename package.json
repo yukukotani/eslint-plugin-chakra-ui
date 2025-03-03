@@ -27,16 +27,16 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@typescript-eslint/utils": "^8.19.1"
+    "@typescript-eslint/utils": "^8.26.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",
     "@swc/core": "^1.4.1",
     "@types/node": "^18.19.71",
-    "@typescript-eslint/eslint-plugin": "^8.19.1",
-    "@typescript-eslint/parser": "^8.19.1",
-    "@typescript-eslint/rule-tester": "^8.19.1",
-    "@typescript-eslint/types": "^8.19.1",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
+    "@typescript-eslint/rule-tester": "^8.26.0",
+    "@typescript-eslint/types": "^8.26.0",
     "eslint": "^9.18.0",
     "eslint-plugin-eslint-plugin": "^6.4.0",
     "eslint-plugin-unused-imports": "^4.1.4",
