@@ -30,8 +30,8 @@
     "@typescript-eslint/utils": "^8.19.1"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.62",
-    "@swc/core": "^1.4.1",
+    "@swc/cli": "^0.6.0",
+    "@swc/core": "^1.11.6",
     "@types/node": "^18.19.71",
     "@typescript-eslint/eslint-plugin": "^8.19.1",
     "@typescript-eslint/parser": "^8.19.1",
